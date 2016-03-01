@@ -1,0 +1,26 @@
+<meta charset="UTF-8">
+<html>
+<head>
+<title>Test Agents</title>
+	<script src="./agentstest.js"></script>
+	<link rel=StyleSheet href="./appstyle.css" type="text/css">
+</head>
+
+<body>
+	<div id="viewbox"></div>
+	<script>
+		var elem = document.getElementById("viewbox");
+		elem.style.height = "350px";
+		elem.style.width = "500px";
+		var env = new XYEnvironment(500, 350);
+
+		var sqr = new Thing(250, 175, 30, 30);
+		sqr.Display(env);
+
+		var smith = new Agent(250, 125);
+		smith.Display(env);
+
+		env.Render(elem);
+	</script>
+</body>
+</html>
