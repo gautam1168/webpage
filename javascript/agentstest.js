@@ -1,4 +1,37 @@
 "use strict";
+//TrivialVacuumEnvironment
+//------------------------------------------------------------------------------
+var TrivialVacuumEnvironment = function(width, height){
+    this.width = width;
+    this.height = height;
+    var locvala = Math.random();
+    var locvalb = Math.random();
+    this.status = [locvala > 0.5 ? "Clean":"Dirty",
+                   locvalb > 0.5 ? "Clean":"Dirty"];
+    this.canvas = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    this.squares = [];
+}
+
+TrivialVacuumEnvironment.prototype.Render = function(elem){
+    this.canvas.setAttribute("width", this.width);
+    this.canvas.setAttribute("height", this.height);
+    var i;
+    for (i=0; i<2; i++){
+        this.squares.push(document.createElementNS("http://www.w3.org/2000/svg",
+                                                                    "rect"));
+        this.squares[i].setAttribute("x", i*this.width/2);
+        this.squares[i].setAttribute("y", 0);
+        this.squares[i].setAttribute("width", this.width/2);
+        this.squares[i].setAttribute("height", this.height);
+        if (this.status[i] == "Clean"){
+            this.squares[i].setAttribute("fill", "white");
+        }
+        this.canvas.appendChild(this.squares[i]);
+    }
+
+    elem.appendChild(this.canvas);
+}
+//------------------------------------------------------------------------------
 
 //XY environment class
 //------------------------------------------------------------------------------

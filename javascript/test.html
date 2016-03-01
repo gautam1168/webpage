@@ -7,9 +7,10 @@
 </head>
 
 <body>
-	<div id="viewbox"></div>
+	<div id="xy" class="viewbox"></div>
+	<div id="trivialVac" class="viewbox"></div>
 	<script>
-		var elem = document.getElementById("viewbox");
+		var elem = document.getElementById("xy");
 		elem.style.height = "350px";
 		elem.style.width = "500px";
 		var env = new XYEnvironment(500, 350);
@@ -19,6 +20,11 @@
 
 		var smith = new Agent(250, 125);
 		smith.Display(env);
+
+		env.Render(elem);
+
+		var env = new TrivialVacuumEnvironment(500, 350);
+		elem = document.getElementById("trivialVac");
 
 		env.Render(elem);
 	</script>
