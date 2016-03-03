@@ -28,6 +28,9 @@ TrivialVacuumEnvironment.prototype.Render = function(elem){
         if (this.stat[i] == "Clean"){
             this.squares[i].setAttribute("fill", "white");
         }
+        else{
+            this.squares[i].setAttribute("fill", "grey");
+        }
         this.canvas.appendChild(this.squares[i]);
     }
     elem.appendChild(this.canvas);
@@ -103,8 +106,11 @@ TrivialVacuumEnvironment.prototype.ExogenousChange = function(){
         this.agents[i].performance = 0;
     }
     for (i=0; i<this.stat.length; i++){
-        if (Math.random() >0.5){
-            window.setTimeout(this.Dirtyfy(i), 5000);
+        if (Math.random() < 0.5){
+            this.Dirtyfy(i);
+        }
+        else{
+            this.Cleanse(i);
         }
     }
 }

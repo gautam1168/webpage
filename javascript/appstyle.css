@@ -12,6 +12,18 @@ div.viewbox{
     margin: 2px;
 }
 
+div#worksheet{
+    background-color: #ffffff;
+    -webkit-box-shadow: -3px 4px 5px 1px rgba(70,70,70,0.72);
+    -moz-box-shadow: -3px 4px 5px 1px rgba(70,70,70,0.72);
+    box-shadow: -3px 4px 5px 1px rgba(70,70,70,0.72);
+}
+
+body{
+    background-image: url("repeattexture.png");
+    background-repeat: repeat;
+}
+
 h1{
     font-family: 'Noto Serif', serif;
 }
