@@ -7,10 +7,6 @@ div.viewbox{
     width: 500px;
 }
 
-body{
-    background-image: url(background.jpg);
-}
-
 h1{
     color: #ffffff;
     font-family: 'Noto Serif', serif;
