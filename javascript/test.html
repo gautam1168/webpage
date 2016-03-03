@@ -10,6 +10,7 @@
 	<div>
 		<div id="trivialVac" class="viewbox"></div>
 		<button id="trivialVacStep"> Step </button>
+		<button id="trivialVacRefresh"> Refresh </button>
 	</div>
 	<script>
 		/*
@@ -30,8 +31,12 @@
 		env2.Render(elem);
 		var smith = TableDrivenVacuumAgent();
 		env2.AddThing(smith, [1,0]);
+
 		btn = document.getElementById("trivialVacStep");
 		btn.addEventListener("click", function(){env2.Step();}, false);
+
+		btn = document.getElementById("trivialVacRefresh");
+		btn.addEventListener("click", function(){env2.ExogenousChange();}, false);
 	</script>
 </body>
 </html>

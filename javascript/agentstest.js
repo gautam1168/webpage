@@ -100,7 +100,7 @@ TrivialVacuumEnvironment.prototype.Step = function(){
 TrivialVacuumEnvironment.prototype.ExogenousChange = function(){
     var i;
     for (i=0; i<this.stat.length; i++){
-        if (this.stat[i] == "Clean" && Math.random() >0.5){
+        if (Math.random() >0.5){
             window.setTimeout(this.Dirtyfy(i), 5000);
         }
     }
