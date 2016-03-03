@@ -45,14 +45,12 @@
 			<h1>Trivial Vacuum Agent</h1>
 		</div>
 		<div class="container">
-			<div class=row>
-				<div id="trivialVac" class="viewbox"></div>
-				<div id="performanceChart" class="viewbox"></div>
-			</div>
+			<div id="trivialVac" class="viewbox"></div>
 			<div>
 				<button type="button" id="trivialVacStep" class="btn btn-primary"> Step </button>
 				<button type="button" id="trivialVacRefresh" class="btn btn-secondary"> Refresh </button>
 			</div>
+			<div id="performanceChart" class="viewbox"></div>
 		</div>
 	</div>
 	<script>
@@ -61,7 +59,6 @@
 		env2.Render(elem);
 		var smith = TableDrivenVacuumAgent();
 		env2.AddThing(smith, [1,0]);
-		elem.appendChild(robotsvg);
 		btn = document.getElementById("trivialVacStep");
 		btn.addEventListener("click", function(){
 													env2.Step();
