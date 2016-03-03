@@ -10,23 +10,25 @@
 	<div id="xy" class="viewbox"></div>
 	<div id="trivialVac" class="viewbox"></div>
 	<script>
+		/*
 		var elem = document.getElementById("xy");
-		elem.style.height = "350px";
-		elem.style.width = "500px";
+
 		var env = new XYEnvironment(500, 350);
 
 		var sqr = new Thing(250, 175, 30, 30);
 		sqr.Display(env);
 
-		var smith = new Agent(250, 125);
+		var smith = new Agent(null);
 		smith.Display(env);
 
 		env.Render(elem);
-
-		var env = new TrivialVacuumEnvironment(500, 350);
+		*/
+		var env2 = new TrivialVacuumEnvironment(500, 350);
 		elem = document.getElementById("trivialVac");
+		env2.Render(elem);
+		var smith = TableDrivenVacuumAgent();
+		smith.Display(env2);
 
-		env.Render(elem);
 	</script>
 </body>
 </html>

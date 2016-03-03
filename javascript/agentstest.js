@@ -31,6 +31,45 @@ TrivialVacuumEnvironment.prototype.Render = function(elem){
 
     elem.appendChild(this.canvas);
 }
+
+TrivialVacuumEnvironment.prototype.Percept = function(agent){
+    var perceptkey = "";
+    perceptkey += this.status[agent.location] + String(agent.location);
+    return perceptkey;
+}
+
+TrivialVacuumEnvironment.prototype.execute_action = function(agent, action){
+    if (action == 'Left'){
+        agent.location = 0;
+        agent.performance -= 1;
+    }
+    else if (action == 'Right'){
+        agent.location = 1;
+        agent.performance -= 1;
+    }
+    else if (action == 'Suck'){
+        if (this.status[agent.location] == 'Dirty'){
+            agent.performance += 10;
+        }
+        this.status[agent.location] = 'Clean';
+    }
+}
+
+TrivialVacuumEnvironment.prototype.Default_location = function(){
+    return Math.floor(Math.random()*2);
+}
+
+
+TrivialVacuumEnvironment.prototype.Step = function(){
+    var action;
+    for (agent in this.agents){
+        action = agent.program(this.percept(agent));
+        this.execute_action(agent, action);
+    }
+    this.Exogenous_change();
+}
+
+TrivialVacuumEnvironment.prototype.Exogenous_change = function(){}
 //------------------------------------------------------------------------------
 
 //XY environment class
@@ -69,20 +108,49 @@ Thing.prototype.Display = function(env){
 }
 //------------------------------------------------------------------------------
 
-//Simple Agent class
+//Simple Agent class, derived from thing
 //------------------------------------------------------------------------------
-function Agent(x, y){
-    Thing.call(this, x, y, 20, 20);
+function Agent(program){
+    Thing.call(this, 0, 0, 20, 20);
     this.svgelem = document.createElementNS("http://www.w3.org/2000/svg",
                                                                     "polygon");
-    this.svgelem.setAttribute("points", String(x)+","+String(y)+" "+
-                                        String(x+20)+","+String(y)+" "+
-                                        String(x+10)+","+String(y+20));
+    this.svgelem.setAttribute("points", "0,0 20,0 10,20");
+    this.svgelem.setAttribute("fill", "red");
+
+    //Assign default program if none is given
+    if (program == null){
+        this.program = function(){ return "Default-percept";}
+    }
+    //Check program is a callable
+    else if (typeof(program) == 'function'){
+        this.program = program;
+    }
+    else{
+        alert("Agent was given a bad program!!");
+    }
 }
 Agent.prototype = Object.create(Thing.prototype);
 Agent.prototype.constructor = Agent;
 
 Agent.prototype.Display = function(env){
     env.canvas.appendChild(this.svgelem);
+}
+//------------------------------------------------------------------------------
+
+//Program makers for agents
+//------------------------------------------------------------------------------
+function TableDrivenAgentProgram(table){
+    var program = function(percept){
+        this.table = table;
+        var action = table[percept];
+        return action;
+    }
+    return program;
+}
+
+function TableDrivenVacuumAgent(){
+    var table = {'Clean0':'Right', 'Dirty0':'Suck',
+                 'Clean1':'Left', 'Dirty1':'Suck'};
+    return new Agent(TableDrivenAgentProgram(table));
 }
 //------------------------------------------------------------------------------
