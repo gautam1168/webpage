@@ -23,8 +23,8 @@ TrivialVacuumEnvironment.prototype.Render = function(elem){
                                                                     "rect"));
         this.squares[i].setAttribute("x", i*this.canvwidth/2);
         this.squares[i].setAttribute("y", 0);
-        this.squares[i].setAttribute("width", this.canvwidth/2-17);
-        this.squares[i].setAttribute("height", this.canvheight-15);
+        this.squares[i].setAttribute("width", this.canvwidth/2-18);
+        this.squares[i].setAttribute("height", this.canvheight-17);
         if (this.stat[i] == "Clean"){
             this.squares[i].setAttribute("fill", "white");
         }
