@@ -1,6 +1,9 @@
 div.viewbox{
     border-style: solid;
-    border-width: 1px;
+    border-top-width: thick;
+    border-left-width: thick;
+    border-bottom-width: thick;
+    border-right-width: thick;
     border-radius: 5px;
     border-color: #76323F;
     height: 350px;
