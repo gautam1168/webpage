@@ -1,0 +1,52 @@
+<meta charset="UTF-8">
+<html>
+<head>
+<title>Test Agents</title>
+	<script src="./agentstest.js"></script>
+	<!--
+	<link rel=StyleSheet href="./appstyle.css" type="text/css">
+	-->
+	<meta charset = "utf-8">
+    <meta http-equiv = "X-UA-Compatible" content = "IE = edge">
+	<meta name = "viewport" content = "width = device-width, initial-scale = 1">
+
+    <!-- Bootstrap -->
+    <link href = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel = "stylesheet">
+</head>
+
+<body>
+	<div class="container">
+		<h1>Trivial Vacuum Agent</h1>
+	</div>
+	<div class="container">
+		<div id="trivialVac" class="viewbox row"></div>
+		<div class="row">
+			<button type="button" id="trivialVacStep" class="btn btn-primary"> Step </button>
+			<button type="button" id="trivialVacRefresh" class="btn btn-secondary"> Refresh </button>
+		</div>
+	</div>
+	<script>
+		var env2 = new TrivialVacuumEnvironment(500, 350);
+		elem = document.getElementById("trivialVac");
+		env2.Render(elem);
+		var smith = TableDrivenVacuumAgent();
+		env2.AddThing(smith, [1,0]);
+
+		btn = document.getElementById("trivialVacStep");
+		btn.addEventListener("click", function(){
+													env2.Step();
+													console.log(smith.performance);
+												},
+							false);
+
+		btn = document.getElementById("trivialVacRefresh");
+		btn.addEventListener("click", function(){env2.ExogenousChange();}, false);
+	</script>
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
