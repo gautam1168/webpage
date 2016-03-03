@@ -4,6 +4,8 @@
 var TrivialVacuumEnvironment = function(width, height){
     this.width = width;
     this.height = height;
+    this.agents = [];
+    this.things = [];
     var locvala = Math.random();
     var locvalb = Math.random();
     this.status = [locvala > 0.5 ? "Clean":"Dirty",
@@ -32,13 +34,29 @@ TrivialVacuumEnvironment.prototype.Render = function(elem){
     elem.appendChild(this.canvas);
 }
 
+TrivialVacuumEnvironment.prototype.AddThing = function(thing, location){
+    thing.location = location;
+    if (thing instanceof Agent){
+        this.agents.push(thing);
+        this.things.push(thing);
+        thing.Display(this);
+    }
+    else if(thing instanceof Thing){
+        this.things.push(thing);
+        thing.Display(this);
+    }
+    else{
+        alert("TrivialVacuumEnvironment doesn't support this thing.");
+    }
+}
+
 TrivialVacuumEnvironment.prototype.Percept = function(agent){
     var perceptkey = "";
     perceptkey += this.status[agent.location] + String(agent.location);
     return perceptkey;
 }
 
-TrivialVacuumEnvironment.prototype.execute_action = function(agent, action){
+TrivialVacuumEnvironment.prototype.ExecuteAction = function(agent, action){
     if (action == 'Left'){
         agent.location = 0;
         agent.performance -= 1;
@@ -92,18 +110,17 @@ XYEnvironment.prototype.Render = function(elem){
 //instantiated)
 //------------------------------------------------------------------------------
 var Thing = function(x, y, width, height){
+    this.location = [x, y];
     this.elemtype = "rect";
-    this.elemattrs = ["x", "y", "width", "height"];
-    this.attrvals = [x, y, width, height];
     this.svgelem = document.createElementNS("http://www.w3.org/2000/svg",
                                                                 this.elemtype);
-    this.svgelem.setAttribute("x", x);
-    this.svgelem.setAttribute("y", y);
     this.svgelem.setAttribute("width", width);
     this.svgelem.setAttribute("height", height);
 }
 
 Thing.prototype.Display = function(env){
+    this.svgelem.setAttribute("x", this.location[0]);
+    this.svgelem.setAttribute("y", this.location[1]);
     env.canvas.appendChild(this.svgelem);
 }
 //------------------------------------------------------------------------------
@@ -133,6 +150,11 @@ Agent.prototype = Object.create(Thing.prototype);
 Agent.prototype.constructor = Agent;
 
 Agent.prototype.Display = function(env){
+    var x = this.location[0];
+    var y = this.location[1];
+    this.svgelem.setAttribute("points", String(x)+","+String(y)+" "+
+                                        String(x+20)+","+String(y)+" "+
+                                        String(x+10)+","+String(y+15));
     env.canvas.appendChild(this.svgelem);
 }
 //------------------------------------------------------------------------------
