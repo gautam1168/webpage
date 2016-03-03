@@ -23,10 +23,17 @@
 	</div>
 	<nav class="navbar navbar-default" role="navigation">
 		<div class="navbar-header">
-			<botton type="button" class="navbar-toggle">Demo Types</button>
+			<botton type="button" class="navbar-toggle"
+			data-toggle="collapse" data-target="#demotypenavbar">
+				<span class="sr-only">Demo Types</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<a class="navbar-brand">Demo Types</a>
+			</button>
 		</div>
 
-		<div class="collapse navbar-collapse">
+		<div class="collapse navbar-collapse" id="demotypenavbar">
 		<ul class="nav navbar-nav">
 			<li class="active"><a href="#">Agents</a></li>
 			<li><a href="#">NLP</a></li>
