@@ -5,7 +5,7 @@ div.viewbox{
     border-bottom-width: thick;
     border-right-width: thick;
     border-radius: 5px;
-    border-color: #76323F;
+    border-color: #274e64;
     height: 350px;
     width: 500px;
     padding: 5px;
@@ -14,4 +14,14 @@ div.viewbox{
 
 h1{
     font-family: 'Noto Serif', serif;
+}
+
+button.btn-primary{
+    background-color: #274e64;
+}
+
+button.btn-secondary{
+    border: solid;
+    border-width: thin;
+    border-color: grey;
 }
