@@ -7,8 +7,10 @@
 </head>
 
 <body>
-	<div id="xy" class="viewbox"></div>
-	<div id="trivialVac" class="viewbox"></div>
+	<div>
+		<div id="trivialVac" class="viewbox"></div>
+		<button id="trivialVacStep"> Step </button>
+	</div>
 	<script>
 		/*
 		var elem = document.getElementById("xy");
@@ -28,7 +30,8 @@
 		env2.Render(elem);
 		var smith = TableDrivenVacuumAgent();
 		env2.AddThing(smith, [1,0]);
-
+		btn = document.getElementById("trivialVacStep");
+		btn.addEventListener("click", function(){env2.Step();}, false);
 	</script>
 </body>
 </html>

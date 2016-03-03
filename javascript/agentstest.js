@@ -30,7 +30,6 @@ TrivialVacuumEnvironment.prototype.Render = function(elem){
         }
         this.canvas.appendChild(this.squares[i]);
     }
-
     elem.appendChild(this.canvas);
 }
 
