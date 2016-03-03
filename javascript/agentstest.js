@@ -99,6 +99,9 @@ TrivialVacuumEnvironment.prototype.Step = function(){
 
 TrivialVacuumEnvironment.prototype.ExogenousChange = function(){
     var i;
+    for (i=0; i<this.agents.length; i++){
+        this.agents[i].performance = 0;
+    }
     for (i=0; i<this.stat.length; i++){
         if (Math.random() >0.5){
             window.setTimeout(this.Dirtyfy(i), 5000);
@@ -150,6 +153,7 @@ function Agent(program){
                                                                     "polygon");
     this.svgelem.setAttribute("points", "0,0 20,0 10,20");
     this.svgelem.setAttribute("fill", "red");
+    this.performance = 0;
 
     //Assign default program if none is given
     if (program == null){
