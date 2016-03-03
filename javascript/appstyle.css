@@ -1,5 +1,17 @@
 div.viewbox{
     border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: #76323F;
     height: 350px;
     width: 500px;
+}
+
+body{
+    background-image: url(background.jpg);
+}
+
+h1{
+    color: #ffffff;
+    font-family: 'Noto Serif', serif;
 }

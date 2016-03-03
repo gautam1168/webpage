@@ -61,7 +61,7 @@ TrivialVacuumEnvironment.prototype.Cleanse = function(location){
 }
 
 TrivialVacuumEnvironment.prototype.Dirtyfy = function(location){
-    this.squares[location].setAttribute("fill", "black");
+    this.squares[location].setAttribute("fill", "#565656");
     this.stat[location] = "Dirty";
 }
 
@@ -152,7 +152,7 @@ function Agent(program){
     this.svgelem = document.createElementNS("http://www.w3.org/2000/svg",
                                                                     "polygon");
     this.svgelem.setAttribute("points", "0,0 20,0 10,20");
-    this.svgelem.setAttribute("fill", "red");
+    this.svgelem.setAttribute("fill", "#76323F");
     this.performance = 0;
 
     //Assign default program if none is given
