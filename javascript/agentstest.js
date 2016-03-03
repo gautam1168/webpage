@@ -2,30 +2,30 @@
 //TrivialVacuumEnvironment
 //------------------------------------------------------------------------------
 var TrivialVacuumEnvironment = function(width, height){
-    this.width = width;
-    this.height = height;
+    this.canvwidth = width;
+    this.canvheight = height;
     this.agents = [];
     this.things = [];
     var locvala = Math.random();
     var locvalb = Math.random();
-    this.status = [locvala > 0.5 ? "Clean":"Dirty",
+    this.stat = [locvala > 0.5 ? "Clean":"Dirty",
                    locvalb > 0.5 ? "Clean":"Dirty"];
     this.canvas = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.squares = [];
 }
 
 TrivialVacuumEnvironment.prototype.Render = function(elem){
-    this.canvas.setAttribute("width", this.width);
-    this.canvas.setAttribute("height", this.height);
+    this.canvas.setAttribute("width", this.canvwidth);
+    this.canvas.setAttribute("height", this.canvheight);
     var i;
     for (i=0; i<2; i++){
         this.squares.push(document.createElementNS("http://www.w3.org/2000/svg",
                                                                     "rect"));
-        this.squares[i].setAttribute("x", i*this.width/2);
+        this.squares[i].setAttribute("x", i*this.canvwidth/2);
         this.squares[i].setAttribute("y", 0);
-        this.squares[i].setAttribute("width", this.width/2);
-        this.squares[i].setAttribute("height", this.height);
-        if (this.status[i] == "Clean"){
+        this.squares[i].setAttribute("width", this.canvwidth/2);
+        this.squares[i].setAttribute("height", this.canvheight);
+        if (this.stat[i] == "Clean"){
             this.squares[i].setAttribute("fill", "white");
         }
         this.canvas.appendChild(this.squares[i]);
@@ -52,16 +52,18 @@ TrivialVacuumEnvironment.prototype.AddThing = function(thing, location){
 
 TrivialVacuumEnvironment.prototype.Percept = function(agent){
     var perceptkey = "";
-    perceptkey += this.status[agent.location] + String(agent.location);
+    perceptkey += this.stat[agent.location[0]] + String(agent.location[0]);
     return perceptkey;
 }
 
 TrivialVacuumEnvironment.prototype.Cleanse = function(location){
     this.squares[location].setAttribute("fill", "white");
+    this.stat[location] = "Clean";
 }
 
 TrivialVacuumEnvironment.prototype.Dirtyfy = function(location){
     this.squares[location].setAttribute("fill", "black");
+    this.stat[location] = "Dirty";
 }
 
 TrivialVacuumEnvironment.prototype.ExecuteAction = function(agent, action){
@@ -74,7 +76,7 @@ TrivialVacuumEnvironment.prototype.ExecuteAction = function(agent, action){
         agent.performance -= 1;
     }
     else if (action == 'Suck'){
-        if (this.status[agent.location[0]] == 'Dirty'){
+        if (this.stat[agent.location[0]] == 'Dirty'){
             agent.performance += 10;
         }
         this.Cleanse(agent.location[0]);
@@ -88,27 +90,35 @@ TrivialVacuumEnvironment.prototype.Default_location = function(){
 
 TrivialVacuumEnvironment.prototype.Step = function(){
     var action;
-    for (agent in this.agents){
-        action = agent.program(this.percept(agent));
-        this.ExecuteAction(agent, action);
+    var i;
+    for (i=0; i<this.agents.length; i++){
+        var action = this.agents[i].program(this.Percept(this.agents[i]));
+        this.ExecuteAction(this.agents[0], action);
     }
-    this.ExogenousChange();
+    //this.ExogenousChange();
 }
 
-TrivialVacuumEnvironment.prototype.ExogenousChange = function(){}
+TrivialVacuumEnvironment.prototype.ExogenousChange = function(){
+    var i;
+    for (i=0; i<this.stat.length; i++){
+        if (this.stat[i] == "Clean" && Math.random() >0.5){
+            window.setTimeout(this.Dirtyfy(i), 5000);
+        }
+    }
+}
 //------------------------------------------------------------------------------
 
 //XY environment class
 //------------------------------------------------------------------------------
 var XYEnvironment = function(width, height){
-    this.width = width;
-    this.height = height;
+    this.canvwidth = width;
+    this.canvheight = height;
     this.canvas = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 }
 
 XYEnvironment.prototype.Render = function(elem){
-    this.canvas.setAttribute("width", this.width);
-    this.canvas.setAttribute("height", this.height);
+    this.canvas.setAttribute("width", this.canvwidth);
+    this.canvas.setAttribute("height", this.canvheight);
 
     elem.appendChild(this.canvas);
 }
