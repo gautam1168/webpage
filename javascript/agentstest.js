@@ -56,20 +56,28 @@ TrivialVacuumEnvironment.prototype.Percept = function(agent){
     return perceptkey;
 }
 
+TrivialVacuumEnvironment.prototype.Cleanse = function(location){
+    this.squares[location].setAttribute("fill", "white");
+}
+
+TrivialVacuumEnvironment.prototype.Dirtyfy = function(location){
+    this.squares[location].setAttribute("fill", "black");
+}
+
 TrivialVacuumEnvironment.prototype.ExecuteAction = function(agent, action){
     if (action == 'Left'){
-        agent.location = 0;
+        agent.MoveTo([0,0]);
         agent.performance -= 1;
     }
     else if (action == 'Right'){
-        agent.location = 1;
+        agent.MoveTo([1,0]);
         agent.performance -= 1;
     }
     else if (action == 'Suck'){
-        if (this.status[agent.location] == 'Dirty'){
+        if (this.status[agent.location[0]] == 'Dirty'){
             agent.performance += 10;
         }
-        this.status[agent.location] = 'Clean';
+        this.Cleanse(agent.location[0]);
     }
 }
 
@@ -82,12 +90,12 @@ TrivialVacuumEnvironment.prototype.Step = function(){
     var action;
     for (agent in this.agents){
         action = agent.program(this.percept(agent));
-        this.execute_action(agent, action);
+        this.ExecuteAction(agent, action);
     }
-    this.Exogenous_change();
+    this.ExogenousChange();
 }
 
-TrivialVacuumEnvironment.prototype.Exogenous_change = function(){}
+TrivialVacuumEnvironment.prototype.ExogenousChange = function(){}
 //------------------------------------------------------------------------------
 
 //XY environment class
@@ -150,12 +158,21 @@ Agent.prototype = Object.create(Thing.prototype);
 Agent.prototype.constructor = Agent;
 
 Agent.prototype.Display = function(env){
-    var x = this.location[0];
+    var x = this.location[0]*250;
     var y = this.location[1];
     this.svgelem.setAttribute("points", String(x)+","+String(y)+" "+
                                         String(x+20)+","+String(y)+" "+
                                         String(x+10)+","+String(y+15));
     env.canvas.appendChild(this.svgelem);
+}
+
+Agent.prototype.MoveTo = function(location){
+    this.location = location;
+    var x = this.location[0]*250;
+    var y = this.location[1];
+    this.svgelem.setAttribute("points", String(x)+","+String(y)+" "+
+                                        String(x+20)+","+String(y)+" "+
+                                        String(x+10)+","+String(y+15));
 }
 //------------------------------------------------------------------------------
 
