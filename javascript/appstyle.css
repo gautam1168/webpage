@@ -8,6 +8,8 @@ div.viewbox{
     border-color: #76323F;
     height: 350px;
     width: 500px;
+    padding: 5px;
+    margin: 2px;
 }
 
 h1{
