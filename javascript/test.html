@@ -94,23 +94,24 @@
 
 		//Link a button in the worksheet to environment's stepper function
 		btn = document.getElementById("trivialVacStep");
-		btn.addEventListener("click", function(){
-													env.Step();
-													console.log(smith.performance);
-												},
-							false);
+		btn.addEventListener("click", stepper, false);
 
 		//Link a button in the worksheet to generate random dirt in environment
 		btn = document.getElementById("trivialVacRefresh");
 		btn.addEventListener("click", function(){env.ExogenousChange();}, false);
 
 		//d3 chart to show the performance
-		var dataset = [20,30,50,20,10], w=500, h=350;
+		var dataset = [0,0,50,0,0], w=500, h=350;
 
 		//Add chart to div whose id is performanceChart
 		var chart = new BarChart("performanceChart", w, h);
 		chart.Plot(dataset, "Performance");
 
+		//Event listener for stepper button
+		function stepper(){
+			env.Step();
+			chart.AddBar(smith.performance);
+		}
 	</script>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

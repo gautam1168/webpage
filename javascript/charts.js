@@ -16,6 +16,7 @@ var BarChart = function(elemid, width, height){
 BarChart.prototype.Plot = function(dataset, label){
     var w = this.w, h = this.h, botpad = this.pad, barpad = this.barpad;
     var toppad = this.toppad, leftpad = this.pad;
+    this.dataset = dataset;
 
     this.yscale = d3.scale.linear()
                           .domain([0, d3.max(dataset)])
@@ -75,5 +76,35 @@ BarChart.prototype.Plot = function(dataset, label){
              .attr('font-size','12px');
 }
 
-BarChart.prototype.Refresher = function(dataset){}
+BarChart.prototype.AddBar = function(height){
+    var dataset = this.dataset;
+    dataset.push(height);
+    var chart = this.chart;
+    var w = this.w, botpad = this.pad, h = this.h, barpad = this.barpad;
+    var leftpad = this.pad;
+    var yscale = this.yscale;
+
+    var bars = chart.selectAll('rect')
+                     .data(dataset)
+                     .enter()
+                     .append('rect')
+                     .attr('x', w)
+                     .attr('y', function(d){
+                            return yscale(d)-botpad;
+                            })
+			         .attr('width', (w-leftpad)/dataset.length - barpad)
+			         .attr('height', function(d){return h-yscale(d);})
+			         .attr('fill', '#427795');
+    bars = chart.selectAll('rect');
+    bars.transition()
+        .duration(500)
+        .attr('x', function(d,i){
+                            return i*((w-leftpad)/dataset.length) + leftpad;
+                            })
+        .attr('y', function(d){
+                            return yscale(d)-botpad;
+                            })
+		.attr('width', (w-leftpad)/dataset.length - barpad)
+		.attr('height', function(d){return h-yscale(d);});
+}
 //------------------------------------------------------------------------------
