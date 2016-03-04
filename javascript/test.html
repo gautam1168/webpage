@@ -20,13 +20,17 @@
 </head>
 
 <body>
+	<!--First we create some html elemnts to place our static content-->
+	<!--The jumbotron-->
 	<div class="container">
 		<div class="jumbotron" style="background:url('background.jpg');">
 			<h1 style="color:white">AIMAcode</h1>
-			<p style="color:white">Demos from Artificial Intelligence: A modern approach</p>
+			<p style="color:white">JavaScript demos from Artificial Intelligence: A modern approach</p>
 		</div>
 	</div>
+	<!--Navigation bar-->
 	<nav class="navbar navbar-default" role="navigation">
+		<!--The button that shows up on small devices-->
 		<div class="navbar-header">
 			<botton type="button" class="navbar-toggle"
 			data-toggle="collapse" data-target="#demotypenavbar">
@@ -35,7 +39,7 @@
 				<span class="icon-bar"></span>
 			</button>
 		</div>
-
+		<!--The actual navigation links-->
 		<div class="collapse navbar-collapse" id="demotypenavbar">
 		<ul class="nav navbar-nav">
 			<li class="active"><a href="#">Agents</a></li>
@@ -44,53 +48,69 @@
 		</ul>
 		</div>
 	</nav>
+
+	<!--Worksheet is the central div that has all the content except jumbotron and
+		navbar-->
 	<div class="col-sm-10 col-sm-offset-1" id="worksheet">
 		<div class="container">
 			<h1>Trivial Vacuum Agent</h1>
 		</div>
-		<p>A trivial vacuum agent works in a simple world of two cells
-			according to rules specified by a table. Change1</p>
+		<p>This is the first agent described in the book. The world for this
+			agent is just two cells placed side-by-side that can be either
+			clean or dirty. The agent shown here as an upside down red triangle
+			can either decide to move to the other cell or clean the current
+			cell. It gets 10 points every time it cleans a dirty cell and loses
+			1 point every time it moves to the other cell.
+		</p>
+		<p>
+			A rational agent will do whatever needs to be done to improve its
+			performance score. The trivial vacuum agent follows instructions
+			provided using a table that lists the states of the world and the
+			actions to follow.
+		</p>
+
+		<!--Placeholder divs that will contain the javascript demos-->
 		<div class="row">
 			<div id="trivialVac" class="viewbox col-sm-5"></div>
 			<div id="performanceChart" class="col-sm-5"></div>
 		</div>
-	<div class="row" style="padding-left:12px">
-		<button type="button" id="trivialVacStep" class="btn btn-primary"> Step </button>
-		<button type="button" id="trivialVacRefresh" class="btn btn-secondary"> Refresh </button>
+		<div class="row" style="padding-left:12px">
+			<button type="button" id="trivialVacStep" class="btn btn-primary"> Step </button>
+			<button type="button" id="trivialVacRefresh" class="btn btn-secondary"> Refresh </button>
+		</div>
 	</div>
-	</div>
+	<!--Worksheet ends here-->
+
+	<!--Putting the active content in placeholder divs-->
 	<script>
-		var env2 = new TrivialVacuumEnvironment(500, 350);
+		//Create the TrivialVacuumEnvironment
+		var env = new TrivialVacuumEnvironment(500, 350);
 		elem = document.getElementById("trivialVac");
-		env2.Render(elem);
-		var smith = TableDrivenVacuumAgent();
-		env2.AddThing(smith, [1,0]);
+		env.Render(elem);
+
+		//Create the agent for this environment
+		var smith = TableDrivenVacuumAgent(); //<--Matrix reference people
+		env.AddThing(smith, [1,0]);
+
+		//Link a button in the worksheet to environment's stepper function
 		btn = document.getElementById("trivialVacStep");
 		btn.addEventListener("click", function(){
-													env2.Step();
+													env.Step();
 													console.log(smith.performance);
 												},
 							false);
 
+		//Link a button in the worksheet to generate random dirt in environment
 		btn = document.getElementById("trivialVacRefresh");
-		btn.addEventListener("click", function(){env2.ExogenousChange();}, false);
+		btn.addEventListener("click", function(){env.ExogenousChange();}, false);
 
-		/*d3 chart*/
+		//d3 chart to show the performance
 		var dataset = [20,30,50,20,10], w=500, h=350;
+
+		//Add chart to div whose id is performanceChart
 		var chart = new BarChart("performanceChart", w, h);
 		chart.Plot(dataset, "Performance");
 
-		btn = document.getElementById('chartrefresher');
-		function chartrefresh(){
-			dataset.push(Math.floor(Math.random()*50));
-			chart = d3.select("#performanceChart").select('svg');
-			chart.selectAll('rect')
-				 .data(dataset);
-			chart.select('x.axis')
-				 .call(xaxis);
-			console.log(dataset)
-		}
-		btn.addEventListener("click", chartrefresh, false);
 	</script>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
