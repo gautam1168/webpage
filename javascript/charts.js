@@ -67,10 +67,12 @@ BarChart.prototype.Plot = function(dataset, label){
 			 .attr('text-anchor', 'end')
 			 .attr('y', 5)
 			 .attr('dy', '0.5em')
-			 .attr('x', -leftpad)
+			 .attr('x', -h/3)
 			 .attr('transform', 'rotate(-90)')
 			 .attr('fill', '#76323F')
-			 .text("Performance");
+			 .text(label)
+             .attr('font-family', 'Sans-Serif')
+             .attr('font-size','12px');
 }
 
 BarChart.prototype.Refresher = function(dataset){}

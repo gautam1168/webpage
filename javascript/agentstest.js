@@ -8,8 +8,7 @@ var TrivialVacuumEnvironment = function(width, height){
     this.things = [];
     var locvala = Math.random();
     var locvalb = Math.random();
-    this.stat = [locvala > 0.5 ? "Clean":"Dirty",
-                   locvalb > 0.5 ? "Clean":"Dirty"];
+    this.stat = ["Dirty", "Dirty"];
     this.canvas = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.squares = [];
 }
