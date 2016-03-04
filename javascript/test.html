@@ -5,6 +5,7 @@
 	<script src="../d3.js" type="text/javascript"></script>
 	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script src="./agentstest.js"></script>
+	<script src="./charts.js"></script>
 
 	<meta charset = "utf-8">
     <meta http-equiv = "X-UA-Compatible" content = "IE = edge">
@@ -47,17 +48,17 @@
 		</div>
 		<div class="container">
 			<p>A trivial vacuum agent works in a simple world of two cells
-			according to rules specified by a table.</p>
-			<div id="trivialVac" class="viewbox"></div>
-			<div>
-				<button type="button" id="trivialVacStep" class="btn btn-primary"> Step </button>
-				<button type="button" id="trivialVacRefresh" class="btn btn-secondary"> Refresh </button>
-			</div>
+			according to rules specified by a table. Change1</p>
 		</div>
-		<div class="container">
-			<div id="performanceChart" ></div>
-			<button id="chartrefresher" type="button">Refreshchart</button>
+		<div class="row">
+			<div id="trivialVac" class="viewbox col-sm-5"></div>
+			<div id="performanceChart" class="col-sm-5"></div>
 		</div>
+	<div class="row">
+		<button id="chartrefresher" type="button">Refreshchart</button>
+		<button type="button" id="trivialVacStep" class="btn btn-primary"> Step </button>
+		<button type="button" id="trivialVacRefresh" class="btn btn-secondary"> Refresh </button>
+	</div>
 	</div>
 	<script>
 		var env2 = new TrivialVacuumEnvironment(500, 350);
@@ -76,69 +77,9 @@
 		btn.addEventListener("click", function(){env2.ExogenousChange();}, false);
 
 		/*d3 chart*/
-		var dataset = [20,30,50,20,10], w=500, h=250, barpadding=1;
-		var chart = d3.select("#performanceChart")
-		  .append('svg')
-		  .attr('width', w)
-		  .attr('height', h);
-
-		var pad = 40;
-
-		var yscale = d3.scale.linear()
-							.domain([0,d3.max(dataset)+pad])
-							.range([h,0]);
-
-		var xscale = d3.scale.linear()
-							 .domain([0, dataset.length])
-							 .range([0, w]);
-
-		var yaxis = d3.svg.axis()
-						  .scale(yscale)
-						  .orient("left");
-
-		var xaxis = d3.svg.axis()
-						  .scale(xscale)
-						  .orient("bottom");
-
-		chart.selectAll('rect')
-			 .data(dataset)
-			 .enter()
-			 .append('rect')
-			 .attr('x', function(d,i){return i*(w/dataset.length)+pad;})
-			 .attr('y', function(d){return h-yscale(d)-pad;})
-			 .attr('width', w/dataset.length - barpadding)
-			 .attr('height', function(d){return yscale(d);})
-			 .attr('fill', '#427795');
-
-		chart.selectAll('text')
-			 .data(dataset)
-			 .enter()
-			 .append('text')
-			 .text(function(d){return d;})
-			 .attr('x', function(d, i){return i*(w/dataset.length) +
-				 								(0.4*w/dataset.length);})
-			 .attr('y', function(d){return h ;})
-			 .attr('fill', 'white');
-
-		chart.append("g")
-			 .attr('transform', 'translate('+pad+', -'+pad+')')
-			 .attr('class', 'axis')
-			 .call(yaxis);
-
-		chart.append("g")
-			 .attr('transform', 'translate('+pad+','+(h-pad)+')')
-			 .attr('class', 'axis')
-			 .call(xaxis);
-
-		chart.append('text')
-			 .attr('class', 'y label')
-			 .attr('text-anchor', 'end')
-			 .attr('y', 6)
-			 .attr('x', -pad)
-			 .attr('dy', '0.5em')
-			 .attr('transform', 'rotate(-90)')
-			 .attr('fill', '#76323F')
-			 .text("Performance");
+		var dataset = [20,30,50,20,10], w=500, h=250;
+		var chart = new BarChart("performanceChart", w, h);
+		chart.Plot(dataset, "Performance");
 
 		btn = document.getElementById('chartrefresher');
 		function chartrefresh(){
