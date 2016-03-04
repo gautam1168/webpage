@@ -56,6 +56,7 @@
 		</div>
 		<div class="container">
 			<div id="performanceChart" ></div>
+			<button id="chartrefresher" type="button">Refreshchart</button>
 		</div>
 	</div>
 	<script>
@@ -128,6 +129,28 @@
 			 .attr('transform', 'translate('+pad+','+(h-pad)+')')
 			 .attr('class', 'axis')
 			 .call(xaxis);
+
+		chart.append('text')
+			 .attr('class', 'y label')
+			 .attr('text-anchor', 'end')
+			 .attr('y', 6)
+			 .attr('x', -pad)
+			 .attr('dy', '0.5em')
+			 .attr('transform', 'rotate(-90)')
+			 .attr('fill', '#76323F')
+			 .text("Performance");
+
+		btn = document.getElementById('chartrefresher');
+		function chartrefresh(){
+			dataset.push(Math.floor(Math.random()*50));
+			chart = d3.select("#performanceChart").select('svg');
+			chart.selectAll('rect')
+				 .data(dataset);
+			chart.select('x.axis')
+				 .call(xaxis);
+			console.log(dataset)
+		}
+		btn.addEventListener("click", chartrefresh, false);
 	</script>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
