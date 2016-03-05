@@ -66,8 +66,45 @@
 			A rational agent will do whatever needs to be done to improve its
 			performance score. The trivial vacuum agent follows instructions
 			provided using a table that lists the states of the world and the
-			actions to follow.
+			actions to follow. For this agent the table is as shown:
 		</p>
+		<div class="row">
+			<div class="container col-sm-5">
+			<table class="table table-bordered">
+				<caption>Decision table</caption>
+				<thead>
+					<tr>
+						<th>State</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Clean0</td>
+						<td>Right</td>
+					</tr>
+					<tr>
+						<td>Dirty0</td>
+						<td>Suck</td>
+					</tr>
+					<tr>
+						<td>Clean1</td>
+						<td>Left</td>
+					</tr>
+					<tr>
+						<td>Dirty1</td>
+						<td>Suck</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+			<div class="container col-sm-5" style="margin:30px">
+				<p>The states column lists what the agent 'sees'. So a state of
+				Clean0 means the robot sees that it is in cell 0 and that it is
+				clean. Based on this observation it takes the decision to move
+				to the Right.</p>
+			</div>
+		</div>
 
 		<!--Placeholder divs that will contain the javascript demos-->
 		<div class="row">
