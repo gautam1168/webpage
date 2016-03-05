@@ -154,10 +154,21 @@ Thing.prototype.Display = function(env){
 //------------------------------------------------------------------------------
 function Agent(program){
     Thing.call(this, 0, 0, 20, 20);
+    /*
     this.svgelem = document.createElementNS("http://www.w3.org/2000/svg",
                                                                     "polygon");
     this.svgelem.setAttribute("points", "0,0 20,0 10,20");
     this.svgelem.setAttribute("fill", "#76323F");
+    */
+    this.svgelem = document.createElementNS("http://www.w3.org/2000/svg",
+                                                                    "image");
+    this.svgelem.setAttribute("height", "200px");
+    this.svgelem.setAttribute("width", "200px");
+    this.svgelem.setAttribute("y", 0);
+    this.svgelem.setAttribute("x", 0);
+    this.svgelem.setAttributeNS("http://www.w3.org/1999/xlink", "href",
+                                                              "./robot1.svg");
+
     this.performance = 0;
 
     //Assign default program if none is given
@@ -178,9 +189,7 @@ Agent.prototype.constructor = Agent;
 Agent.prototype.Display = function(env){
     var x = this.location[0]*250;
     var y = this.location[1];
-    this.svgelem.setAttribute("points", String(x)+","+String(y)+" "+
-                                        String(x+20)+","+String(y)+" "+
-                                        String(x+10)+","+String(y+15));
+    this.svgelem.setAttribute("x", x);
     env.canvas.appendChild(this.svgelem);
 }
 
@@ -188,9 +197,7 @@ Agent.prototype.MoveTo = function(location){
     this.location = location;
     var x = this.location[0]*250;
     var y = this.location[1];
-    this.svgelem.setAttribute("points", String(x)+","+String(y)+" "+
-                                        String(x+20)+","+String(y)+" "+
-                                        String(x+10)+","+String(y+15));
+    this.svgelem.setAttribute("x", x);
 }
 //------------------------------------------------------------------------------
 
