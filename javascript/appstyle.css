@@ -51,13 +51,13 @@ button.btn-secondary{
     margin-right: auto;
 }
 
-.axis path,
-.axis line{
+.xaxis path, .yaxis path,
+.xaxis line, .yaxis line{
     fill: none;
     stroke: #4d4d4d;
     shape-rendering: crispEdges;
 }
-.axis text{
+.xaxis text, .yaxis text{
     font-family: 'Noto-Serif', serif;
     font-size: 12px;
 }

@@ -18,27 +18,26 @@ BarChart.prototype.Plot = function(dataset, label){
     var toppad = this.toppad, leftpad = this.pad;
     this.dataset = dataset;
 
-    this.yscale = d3.scale.linear()
+    //Create scaling functions
+    var yscale = d3.scale.linear()
                           .domain([0, d3.max(dataset)])
                           .range([h, botpad+toppad]);
 
-    var yscale = this.yscale;
-
-	this.xscale = d3.scale.linear()
+	var xscale = d3.scale.linear()
 						  .domain([0, dataset.length])
 					      .range([0, w]);
 
-    var xscale = this.xscale;
-
-	var yaxis = d3.svg.axis()
+    //Create the axes
+	this.yaxis = d3.svg.axis()
 					  .scale(yscale)
 					  .orient("left");
 
-	var xaxis = d3.svg.axis()
+	this.xaxis = d3.svg.axis()
 					  .scale(xscale)
 					  .orient("bottom")
                       .ticks(0);
 
+    //Add bars for data
     this.chart.selectAll("rect")
               .data(dataset)
               .enter()
@@ -53,18 +52,20 @@ BarChart.prototype.Plot = function(dataset, label){
 			  .attr('height', function(d){return h-yscale(d);})
 			  .attr('fill', '#427795');
 
+    //Add axes to the plot
     this.chart.append("g")
 			 .attr('transform', 'translate('+botpad+', -'+botpad+')')
-			 .attr('class', 'axis')
-			 .call(yaxis);
+			 .attr('class', 'yaxis')
+			 .call(this.yaxis);
 
     this.chart.append("g")
 			 .attr('transform', 'translate('+leftpad+','+(h-leftpad)+')')
-			 .attr('class', 'axis')
-			 .call(xaxis);
+			 .attr('class', 'xaxis')
+			 .call(this.xaxis);
 
+    //Add the y axis label
     this.chart.append('text')
-			 .attr('class', 'y label')
+			 .attr('class', 'ylabel')
 			 .attr('text-anchor', 'end')
 			 .attr('y', 5)
 			 .attr('dy', '0.5em')
@@ -77,14 +78,18 @@ BarChart.prototype.Plot = function(dataset, label){
 }
 
 BarChart.prototype.AddBar = function(height){
-    var dataset = this.dataset;
-    dataset.push(height);
+    this.dataset.push(height);
     var chart = this.chart;
     var w = this.w, botpad = this.pad, h = this.h, barpad = this.barpad;
-    var leftpad = this.pad;
-    var yscale = this.yscale;
+    var leftpad = this.pad, toppad = this.toppad;
 
-    var bars = chart.selectAll('rect')
+    //Recreate the y scale function
+    var yscale = d3.scale.linear()
+                          .domain([0, d3.max(this.dataset)])
+                          .range([h, botpad+toppad]);
+
+    //Add a new rect for the data just outside the viewbox
+    var bars = this.chart.selectAll('rect')
                      .data(dataset)
                      .enter()
                      .append('rect')
@@ -95,7 +100,9 @@ BarChart.prototype.AddBar = function(height){
 			         .attr('width', (w-leftpad)/dataset.length - barpad)
 			         .attr('height', function(d){return h-yscale(d);})
 			         .attr('fill', '#427795');
-    bars = chart.selectAll('rect');
+
+    //Now move all the rects inside the graph
+    bars = this.chart.selectAll('rect');
     bars.transition()
         .duration(500)
         .attr('x', function(d,i){
@@ -106,5 +113,15 @@ BarChart.prototype.AddBar = function(height){
                             })
 		.attr('width', (w-leftpad)/dataset.length - barpad)
 		.attr('height', function(d){return h-yscale(d);});
+
+    //Update the y axis
+    var yaxis = d3.svg.axis()
+					  .scale(yscale)
+					  .orient("left");
+
+    this.chart.select(".yaxis")
+              .transition()
+              .duration(300)
+              .call(yaxis);
 }
 //------------------------------------------------------------------------------
