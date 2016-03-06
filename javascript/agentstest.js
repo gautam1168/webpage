@@ -1,9 +1,4 @@
 "use strict";
-//Base class for environment
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-
 //TrivialVacuumEnvironment
 //------------------------------------------------------------------------------
 var TrivialVacuumEnvironment = function(width, height){
@@ -144,13 +139,37 @@ TrivialVacuumEnvironment.prototype.ExogenousChange = function(){
 var XYEnvironment = function(width, height){
     this.canvwidth = width;
     this.canvheight = height;
+    this.squares = [];
+    this.stat = [];
     this.canvas = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 }
 
-XYEnvironment.prototype.Render = function(elem){
+XYEnvironment.prototype.Render = function(elem, Nx, Ny){
     this.canvas.setAttribute("width", this.canvwidth);
     this.canvas.setAttribute("height", this.canvheight);
+    var i, j, tempsquares;
+    for (i=0; i<Ny; i++){
+        this.stat.push(Array(Nx));
+    }
 
+    for (i=0; i<Nx; i++){
+        tempsquares = [];
+        for (j=0; j<Ny; j++){
+            tempsquares.push(document.createElementNS("http://www.w3.org/2000/svg",
+                                                                        "rect"));
+            tempsquares[j].setAttribute("x", i*this.canvwidth/Nx);
+            tempsquares[j].setAttribute("y", j*this.canvheight/Ny);
+            tempsquares[j].setAttribute("width", this.canvwidth/Nx);
+            tempsquares[j].setAttribute("height", this.canvheight/Ny);
+            if (this.stat[i][j] == "Clean"){
+                tempsquares[j].setAttribute("fill", "white");
+            }
+            else{
+                tempsquares[j].setAttribute("fill", "grey");
+            }
+            this.canvas.appendChild(tempsquares[j]);
+        }
+    }
     elem.appendChild(this.canvas);
 }
 //------------------------------------------------------------------------------

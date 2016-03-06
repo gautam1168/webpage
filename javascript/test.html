@@ -55,18 +55,7 @@
 		<div class="container">
 			<h1>XY Environment</h1>
 		</div>
-		<p>This is the first agent described in the book. The world for this
-			agent is just two cells placed side-by-side that can be either
-			clean or dirty. The agent shown here as an upside down red triangle
-			can either decide to move to the other cell or clean the current
-			cell. It gets 10 points every time it cleans a dirty cell and loses
-			1 point every time it moves to the other cell.
-		</p>
-		<p>
-			A rational agent will do whatever needs to be done to improve its
-			performance score. The trivial vacuum agent follows instructions
-			provided using a table that lists the states of the world and the
-			actions to follow. For this agent the table is as shown:
+		<p>This page is under-construction. 
 		</p>
 
 		<!--Placeholder divs that will contain the javascript demos-->
@@ -88,9 +77,7 @@
 		//Create the TrivialVacuumEnvironment
 		var env = new XYEnvironment(600, 500);
 		elem = document.getElementById("trivialVac");
-		env.Render(elem);
-
-		//Create the agent for this environment
+		env.Render(elem, 8, 8);
 
 	</script>
 
