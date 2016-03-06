@@ -1,0 +1,239 @@
+<meta charset="UTF-8">
+<html>
+<head>
+<title>Test Agents</title>
+	<script src="../d3.js" type="text/javascript"></script>
+	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="./agentstest.js"></script>
+	<script src="./charts.js"></script>
+	<script src="../bootstrap/js/bootstrap.min.js"></script>
+
+	<meta charset = "utf-8">
+    <meta http-equiv = "X-UA-Compatible" content = "IE = edge">
+	<meta name = "viewport" content = "width = device-width, initial-scale = 1">
+
+    <!-- Bootstrap -->
+	<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel = "stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Noto+Serif' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="./appstyle.css">
+</head>
+
+<body>
+	<!--First we create some html elemnts to place our static content-->
+	<!--The jumbotron-->
+	<div class="container">
+		<div class="jumbotron" style="background:url('background.jpg');">
+			<h1 style="color:white">AIMAcode</h1>
+			<p style="color:white">JavaScript demos from Artificial Intelligence: A modern approach</p>
+		</div>
+	</div>
+	<!--Navigation bar-->
+	<nav class="navbar navbar-default" role="navigation">
+		<!--The button that shows up on small devices-->
+		<div class="navbar-header">
+			<botton type="button" class="navbar-toggle"
+			data-toggle="collapse" data-target="#demotypenavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+		<!--The actual navigation links-->
+		<div class="collapse navbar-collapse" id="demotypenavbar">
+		<ul class="nav navbar-nav">
+			<li class="active"><a href="#">Agents</a></li>
+			<li><a href="#">NLP</a></li>
+			<li><a href="#">Search</a></li>
+		</ul>
+		</div>
+	</nav>
+
+	<!--Worksheet is the central div that has all the content except jumbotron and
+		navbar-->
+	<div class="col-sm-10 col-sm-offset-1" id="worksheet">
+		<div class="container">
+			<h1>Trivial Vacuum Environment</h1>
+		</div>
+		<p>This is the first agent described in the book. The world for this
+			agent is just two cells placed side-by-side that can be either
+			clean or dirty. The agent shown here as an upside down red triangle
+			can either decide to move to the other cell or clean the current
+			cell. It gets 10 points every time it cleans a dirty cell and loses
+			1 point every time it moves to the other cell.
+		</p>
+		<p>
+			A rational agent will do whatever needs to be done to improve its
+			performance score. The trivial vacuum agent follows instructions
+			provided using a table that lists the states of the world and the
+			actions to follow. For this agent the table is as shown:
+		</p>
+		<div class="row">
+			<div class="container col-sm-5">
+			<table class="table table-bordered" id="decisiontable">
+				<caption>Decision table</caption>
+				<thead>
+					<tr>
+						<th class="col-sm-2">State</th>
+						<th class="col-sm-2">Action</th>
+						<th class="col-sm-2">Score</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Clean0</td>
+						<td>
+							<select class="form-control">
+								<option value="Right" selected> Right </option>
+								<option value="Suck"> Suck </option>
+							</select>
+						</td>
+						<td>
+							<input type="text" value="-1" size="5px"/>
+						</td>
+					</tr>
+					<tr>
+						<td>Dirty0</td>
+						<td>
+							<select class="form-control">
+								<option value="Suck" selected> Suck </option>
+								<option value="Right"> Right </option>
+							</select>
+						</td>
+						<td>
+							<input type="text" value="+10" size="5px"/>
+						</td>
+					</tr>
+					<tr>
+						<td>Clean1</td>
+						<td>
+							<select class="form-control">
+								<option value="Left" selected> Left </option>
+								<option value="Suck"> Suck </option>
+							</select>
+						</td>
+						<td>
+							<input type="text" value="-1" size="5px"/>
+						</td>
+					</tr>
+					<tr>
+						<td>Dirty1</td>
+						<td>
+							<select class="form-control">
+								<option value="Suck" selected> Suck </option>
+								<option value="Left"> Left </option>
+							</select>
+						</td>
+						<td>
+							<input type="text" value="+10" size="5px"/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+			<div class="container col-sm-5" style="margin:30px">
+				<p>The states column lists what the agent 'sees'. So a state of
+				Clean0 means the robot sees that it is in cell 0 and that it is
+				clean. Based on this observation it takes the decision to move
+				to the Right. If you change something in this decision table then
+				click the refresh agent button at the bottom of the page to
+				recreate the agent.</p>
+			</div>
+		</div>
+
+		<!--Placeholder divs that will contain the javascript demos-->
+		<div class="row">
+			<div id="trivialVac" class="viewbox col-sm-5"
+							style="width:500px; height:350px"></div>
+			<div id="performanceChart" class="col-sm-5"></div>
+		</div>
+		<div class="row" style="padding-left:12px">
+			<button type="button" id="trivialVacStep" class="btn btn-primary"> Step </button>
+			<button type="button" id="trivialVacRefresh" class="btn btn-secondary"> Refresh Dirt </button>
+			<button type="button" id="agentRefresh" class="btn btn-secondary"> Refresh Agent </button>
+		</div>
+
+		<nav>
+			<ul class="pager">
+				<li class="pager-prev disabled"><a href="#">Previous</a></li>
+				<li class="pager-next"><a href="test.html">Next</a></li>
+			</ul>
+		</nav>
+	</div>
+	<!--Worksheet ends here-->
+
+	<!--Putting the active content in placeholder divs-->
+	<script>
+		//Create the TrivialVacuumEnvironment
+		var env = new TrivialVacuumEnvironment(500, 350);
+		elem = document.getElementById("trivialVac");
+		env.Render(elem);
+
+		//Create the agent for this environment
+		var smith = TableDrivenVacuumAgent(); //<--Matrix reference people
+		env.AddThing(smith, [1,0]);
+
+		//Link a button in the worksheet to environment's stepper function
+		btn = document.getElementById("trivialVacStep");
+		btn.addEventListener("click", stepper, false);
+
+		//Link a button in the worksheet to generate random dirt in environment
+		btn = document.getElementById("trivialVacRefresh");
+		btn.addEventListener("click", function(){env.ExogenousChange();}, false);
+
+		//Link a button in the worksheet to refresh the agent from the table
+		btn = document.getElementById("agentRefresh");
+		btn.addEventListener("click", refresher, false);
+
+		//d3 chart to show the performance
+		var dataset = [], w=500, h=350;
+
+		//Add chart to div whose id is performanceChart
+		var chart = new BarChart("performanceChart", w, h);
+		chart.Plot(dataset, "Performance");
+
+		//Event listener for stepper button
+		function stepper(){
+			env.Step();
+			chart.AddBar(smith.performance);
+		}
+
+		//Event listener for refresh button
+		function refresher(){
+			//Parse the values in the table
+			newtable = parsetable("decisiontable");
+			//Remove agent from environment
+			env.RemoveThing(smith);
+			//Create new agent
+			smith = new Agent(TableDrivenAgentProgram(newtable));
+			//Add the new agent to the env
+			env.AddThing(smith, [0,0]);
+		}
+
+		//Function to parse the table
+		function parsetable(tableid){
+			tbl = document.getElementById(tableid);
+			rows = tbl.rows;
+			newtable = {};
+			for (i=1; i < rows.length; i++){
+				//Get list of cells
+				cells = rows[i].cells;
+				//Get the selected action from spinbox
+				spinbox = cells[1].getElementsByTagName("select")[0];
+				action = spinbox.options[spinbox.selectedIndex].value;
+				//Get the performance score
+				score = Number(cells[2].getElementsByTagName("input")[0].value);
+				//Create the table
+				newtable[cells[0].innerHTML] = [action, score];
+			}
+			return newtable;
+		}
+	</script>
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
