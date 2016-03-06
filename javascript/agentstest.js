@@ -51,6 +51,25 @@ TrivialVacuumEnvironment.prototype.AddThing = function(thing, location){
     }
 }
 
+TrivialVacuumEnvironment.prototype.RemoveThing = function(thing){
+    var index;
+    if (thing instanceof Agent){
+        index = this.agents.indexOf(thing);
+        if (index > -1){this.agents.splice(index, 1)};
+        index = this.things.indexOf(thing);
+        if (index > -1){this.things.splice(index, 1)};
+    }
+    else if (thing instanceof Thing){
+        index = this.things.indexOf(thing);
+        if (index > -1){this.things.splice(index, 1)};
+    }
+    else{
+        alert("Cannot remove thing that doesn't exist");
+    }
+
+    this.canvas.removeChild(thing.svgelem);
+}
+
 TrivialVacuumEnvironment.prototype.Percept = function(agent){
     var perceptkey = "";
     perceptkey += this.stat[agent.location[0]] + String(agent.location[0]);
@@ -68,17 +87,17 @@ TrivialVacuumEnvironment.prototype.Dirtyfy = function(location){
 }
 
 TrivialVacuumEnvironment.prototype.ExecuteAction = function(agent, action){
-    if (action == 'Left'){
+    if (action[0] == 'Left'){
         agent.MoveTo([0,0]);
-        agent.performance -= 1;
+        agent.performance += action[1];
     }
-    else if (action == 'Right'){
+    else if (action[0] == 'Right'){
         agent.MoveTo([1,0]);
-        agent.performance -= 1;
+        agent.performance += action[1];
     }
-    else if (action == 'Suck'){
+    else if (action[0] == 'Suck'){
         if (this.stat[agent.location[0]] == 'Dirty'){
-            agent.performance += 10;
+            agent.performance += action[1];
         }
         this.Cleanse(agent.location[0]);
     }
@@ -205,7 +224,6 @@ Agent.prototype.MoveTo = function(location){
 //------------------------------------------------------------------------------
 function TableDrivenAgentProgram(table){
     var program = function(percept){
-        this.table = table;
         var action = table[percept];
         return action;
     }
@@ -213,8 +231,8 @@ function TableDrivenAgentProgram(table){
 }
 
 function TableDrivenVacuumAgent(){
-    var table = {'Clean0':'Right', 'Dirty0':'Suck',
-                 'Clean1':'Left', 'Dirty1':'Suck'};
+    var table = {'Clean0':['Right', -1], 'Dirty0':['Suck', 10],
+                 'Clean1':['Left', -1], 'Dirty1':['Suck', 10]};
     return new Agent(TableDrivenAgentProgram(table));
 }
 //------------------------------------------------------------------------------

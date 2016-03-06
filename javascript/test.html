@@ -70,30 +70,63 @@
 		</p>
 		<div class="row">
 			<div class="container col-sm-5">
-			<table class="table table-bordered">
+			<table class="table table-bordered" id="decisiontable">
 				<caption>Decision table</caption>
 				<thead>
 					<tr>
-						<th>State</th>
-						<th>Action</th>
+						<th class="col-sm-2">State</th>
+						<th class="col-sm-2">Action</th>
+						<th class="col-sm-2">Score</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>Clean0</td>
-						<td>Right</td>
+						<td>
+							<select class="form-control">
+								<option value="Right" selected> Right </option>
+								<option value="Suck"> Suck </option>
+							</select>
+						</td>
+						<td>
+							<input type="text" value="-1" size="5px"/>
+						</td>
 					</tr>
 					<tr>
 						<td>Dirty0</td>
-						<td>Suck</td>
+						<td>
+							<select class="form-control">
+								<option value="Suck" selected> Suck </option>
+								<option value="Right"> Right </option>
+							</select>
+						</td>
+						<td>
+							<input type="text" value="+10" size="5px"/>
+						</td>
 					</tr>
 					<tr>
 						<td>Clean1</td>
-						<td>Left</td>
+						<td>
+							<select class="form-control">
+								<option value="Left" selected> Left </option>
+								<option value="Suck"> Suck </option>
+							</select>
+						</td>
+						<td>
+							<input type="text" value="-1" size="5px"/>
+						</td>
 					</tr>
 					<tr>
 						<td>Dirty1</td>
-						<td>Suck</td>
+						<td>
+							<select class="form-control">
+								<option value="Suck" selected> Suck </option>
+								<option value="Left"> Left </option>
+							</select>
+						</td>
+						<td>
+							<input type="text" value="+10" size="5px"/>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -102,7 +135,9 @@
 				<p>The states column lists what the agent 'sees'. So a state of
 				Clean0 means the robot sees that it is in cell 0 and that it is
 				clean. Based on this observation it takes the decision to move
-				to the Right.</p>
+				to the Right. If you change something in this decision table then
+				click the refresh agent button at the bottom of the page to
+				recreate the agent.</p>
 			</div>
 		</div>
 
@@ -113,7 +148,8 @@
 		</div>
 		<div class="row" style="padding-left:12px">
 			<button type="button" id="trivialVacStep" class="btn btn-primary"> Step </button>
-			<button type="button" id="trivialVacRefresh" class="btn btn-secondary"> Refresh </button>
+			<button type="button" id="trivialVacRefresh" class="btn btn-secondary"> Refresh Dirt </button>
+			<button type="button" id="agentRefresh" class="btn btn-secondary"> Refresh Agent </button>
 		</div>
 	</div>
 	<!--Worksheet ends here-->
@@ -137,6 +173,10 @@
 		btn = document.getElementById("trivialVacRefresh");
 		btn.addEventListener("click", function(){env.ExogenousChange();}, false);
 
+		//Link a button in the worksheet to refresh the agent from the table
+		btn = document.getElementById("agentRefresh");
+		btn.addEventListener("click", refresher, false);
+
 		//d3 chart to show the performance
 		var dataset = [], w=500, h=350;
 
@@ -148,6 +188,37 @@
 		function stepper(){
 			env.Step();
 			chart.AddBar(smith.performance);
+		}
+
+		//Event listener for refresh button
+		function refresher(){
+			//Parse the values in the table
+			newtable = parsetable("decisiontable");
+			//Remove agent from environment
+			env.RemoveThing(smith);
+			//Create new agent
+			smith = new Agent(TableDrivenAgentProgram(newtable));
+			//Add the new agent to the env
+			env.AddThing(smith, [0,0]);
+		}
+
+		//Function to parse the table
+		function parsetable(tableid){
+			tbl = document.getElementById(tableid);
+			rows = tbl.rows;
+			newtable = {};
+			for (i=1; i < rows.length; i++){
+				//Get list of cells
+				cells = rows[i].cells;
+				//Get the selected action from spinbox
+				spinbox = cells[1].getElementsByTagName("select")[0];
+				action = spinbox.options[spinbox.selectedIndex].value;
+				//Get the performance score
+				score = Number(cells[2].getElementsByTagName("input")[0].value);
+				//Create the table
+				newtable[cells[0].innerHTML] = [action, score];
+			}
+			return newtable;
 		}
 	</script>
 
