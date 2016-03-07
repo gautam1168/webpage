@@ -141,6 +141,8 @@ var XYEnvironment = function(width, height){
     this.canvheight = height;
     this.squares = [];
     this.stat = [];
+    this.agents = [];
+    this.things = [];
     this.canvas = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.pad = 1;
 }
@@ -168,6 +170,22 @@ XYEnvironment.prototype.Render = function(elem, Nx, Ny){
         }
     }
     elem.appendChild(this.canvas);
+}
+
+XYEnvironment.prototype.AddThing = function(thing, location){
+    thing.location = location;
+    if (thing instanceof Agent){
+        this.agents.push(thing);
+        this.things.push(thing);
+        thing.Display(this);
+    }
+    else if(thing instanceof Thing){
+        this.things.push(thing);
+        thing.Display(this);
+    }
+    else{
+        alert("TrivialVacuumEnvironment doesn't support this thing.");
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -255,5 +273,47 @@ function TableDrivenVacuumAgent(){
     var table = {'Clean0':['Right', -1], 'Dirty0':['Suck', 10],
                  'Clean1':['Left', -1], 'Dirty1':['Suck', 10]};
     return new Agent(TableDrivenAgentProgram(table));
+}
+//------------------------------------------------------------------------------
+
+//XYAgent that exists in the XYEnvironment
+//------------------------------------------------------------------------------
+function XYAgent(program){
+    Agent.call(this, program);
+    /*
+    this.svgelem = document.createElementNS("http://www.w3.org/2000/svg",
+                                                                    "polygon");
+    this.svgelem.setAttribute("points", "0,0 20,0 10,20");
+    this.svgelem.setAttribute("fill", "#76323F");
+    */
+    this.svgelem.setAttribute("height", "60px");
+    this.svgelem.setAttribute("width", "60px");
+    this.svgelem.setAttribute("y", 0);
+    this.svgelem.setAttribute("x", 0);
+
+    this.performance = 0;
+
+    //Assign default program if none is given
+    if (program == null){
+        this.program = function(){ return "Default-percept";}
+    }
+    //Check program is a callable
+    else if (typeof(program) == 'function'){
+        this.program = program;
+    }
+    else{
+        alert("Agent was given a bad program!!");
+    }
+}
+XYAgent.prototype = Object.create(Agent.prototype);
+XYAgent.prototype.constructor = XYAgent;
+
+
+XYAgent.prototype.Display = function(env){
+    var x = this.location[0]*60 + 6;
+    var y = this.location[1]*60 + 6;
+    this.svgelem.setAttribute("x", x);
+    this.svgelem.setAttribute("y", y);
+    env.canvas.appendChild(this.svgelem);
 }
 //------------------------------------------------------------------------------
