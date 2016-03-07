@@ -142,6 +142,7 @@ var XYEnvironment = function(width, height){
     this.squares = [];
     this.stat = [];
     this.canvas = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    this.pad = 1;
 }
 
 XYEnvironment.prototype.Render = function(elem, Nx, Ny){
@@ -157,16 +158,12 @@ XYEnvironment.prototype.Render = function(elem, Nx, Ny){
         for (j=0; j<Ny; j++){
             tempsquares.push(document.createElementNS("http://www.w3.org/2000/svg",
                                                                         "rect"));
-            tempsquares[j].setAttribute("x", i*this.canvwidth/Nx);
-            tempsquares[j].setAttribute("y", j*this.canvheight/Ny);
-            tempsquares[j].setAttribute("width", this.canvwidth/Nx);
-            tempsquares[j].setAttribute("height", this.canvheight/Ny);
-            if (this.stat[i][j] == "Clean"){
-                tempsquares[j].setAttribute("fill", "white");
-            }
-            else{
-                tempsquares[j].setAttribute("fill", "grey");
-            }
+            tempsquares[j].setAttribute("x", i*(this.canvwidth-20)/Nx + this.pad);
+            tempsquares[j].setAttribute("y", j*(this.canvheight-20)/Ny + this.pad);
+            tempsquares[j].setAttribute("width", (this.canvwidth-20)/Nx - this.pad);
+            tempsquares[j].setAttribute("height", (this.canvheight-20)/Ny - this.pad);
+            tempsquares[j].setAttribute("fill", "grey");
+            this.stat[i][j] = "Dirty";
             this.canvas.appendChild(tempsquares[j]);
         }
     }
