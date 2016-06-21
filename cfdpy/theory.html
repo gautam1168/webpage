@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>cfdpy - Computational Method</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="assets/template.css" type="text/css" />
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "all"} } });
+</script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+</head>
+<body>
+    <div class="navbar navbar-static-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <span class="doc-title">Computational Method</span>
+        <ul class="nav pull-right doc-info">
+                            </ul>
+      </div>
+    </div>
+  </div>
+    <div class="container col-md-10">
+            <div id="contentsheet">
+            <h1 id="pde">PDE</h1>
+<p>The PDE solved here are the Navier-Stokes equations(NSE) for incompressible flow. The NSE are reproduced here:</p>
+<p><span class="math">\[\dot{\vec{u}} = -(\vec{u}\cdot\nabla)\vec{u} + \nu \nabla^2 \vec{u}-\vec{\nabla}p\]</span></p>
+<p>The incompressible flow condition gives another equation:</p>
+<p><span class="math">\[\vec{\nabla}\cdot u = 0\]</span></p>
+<p>The discretization is done on a staggered grid with arrangement of velocities and pressure variables as shown below.</p>
+<div class="figure">
+<img src="cellstructure.svg" alt="Figure: Varible arrangement." /><p class="caption">Figure: Varible arrangement.</p>
+</div>
+<h1 id="computational-scheme-on-uniform-grid">Computational scheme on uniform grid</h1>
+<p>We use pressure correction scheme as given in this <a href="http://heattransfer.asmedigitalcollection.asme.org/article.aspx?articleid=1447535">paper</a> by N. Hasan and S. Sanghi. The paper discusses pressure correction scheme on a collocated grid and introduces staggering in the step of calculation of pressure correction by using Rhie and Chow momentum interpolation (see eqn. 17) of the paper. We step this step for calculation on a staggered grid. The scheme can be summarized as follows:</p>
+<p><span class="math">\[\vec{u}^{n}_p = \vec{u}^n + \delta t\left[\nu \nabla^2 \vec{u}^n -\left(\vec{u}^n\cdot\vec{\nabla}\right)\vec{u}^n \right]\]</span></p>
+<p><span class="math">\[\vec{u}^{n+1}_b = \vec{u}^{n}_p - \delta t \vec{\nabla} p^n\]</span></p>
+<p><span class="math">\[\nabla^2p^\prime = \frac{\vec{\nabla}\cdot\vec{u}^{n+1}_b}{\delta t}\]</span></p>
+<p><span class="math">\[p^{n+1} = p^{n} + p^{\prime}\]</span></p>
+<p><span class="math">\[\vec{u}^{n+1} = \vec{u}_b^{n+1} - \delta t \vec{\nabla}p^{\prime}\]</span></p>
+<p>For discretization of the derivatives we use the following approximations:</p>
+<ul>
+<li><p><strong><span class="math">\(\vec{\nabla} p^n\)</span>, <span class="math">\(\vec{\nabla} p^\prime\)</span></strong>: The derivatives are to be calculated at cell boundaries using data at cell centers. A central differencing stencil with the values available at <span class="math">\(\left(\pm\frac{\Delta x}{2}, \pm\frac{\Delta y}{2}\right)\)</span> is used.</p></li>
+<li><p><strong><span class="math">\(\vec{\nabla}\cdot\vec{u}_b^{n+1}\)</span></strong>: The derivatives are calculated at the cell centers using the velocity values at <span class="math">\(\left(\pm\frac{\Delta x}{2}, \pm\frac{\Delta y}{2}\right)\)</span> using central differencing. <em>There is enough data to calculate all derivatives as there are no values to be calculated on the wall.</em></p></li>
+<li><p><strong><span class="math">\(\left(\vec{u}^n\cdot\vec{\nabla}\right)\vec{u}^n\)</span></strong>: The velocity values that are not available at the required location are interpolated. First order upwind differencing is used if absolute cell Peclet number is greater than 2, otherwise central differencing is used.</p></li>
+<li><p><strong><span class="math">\(\nu \nabla^2 \vec{u}^n\)</span></strong>: Second order central differencing is used everywhere except at the walls where second order upwind differencing is used.</p></li>
+</ul>
+<p>Using this scheme we simulate the lid driven cavity in 2D and we get the following velocity field at Re=100 and mesh dimension [65 x 65]. The results are plotted here:</p>
+<div class="figure">
+<img src="uniformgrid_results.svg" alt="Figure: Lid-driven cavity simulation on uniform staggered grid" /><p class="caption">Figure: Lid-driven cavity simulation on uniform staggered grid</p>
+</div>
+<p>I was able to get rid of the divergence peaks by removing derivative interpolations from the code. (In the earlier version I used to calculate pressure gradients at the cell centers and interpolate them to the boundaries.) The divergence is small but it shows a checkerboard pattern. I don't know if this is a reason for concern. Does this mean that the equations are satisfying the zero divergence condition in only a global sense?</p>
+<p><img src="divergence.svg" alt="Figure: Divergence on a uniform grid." />.<br /></p>
+<h1 id="transformation-to-non-uniform-grid">Transformation to non-uniform grid</h1>
+<p>For solving on non-uniform grids we use the same computational method but work in transformed <span class="math">\((\xi, \eta)\)</span> coordinates. The forms of derivatives in transformed coordinates is changed and thus the PDE's are modified and given extra terms.</p>
+<p>We use <span class="math">\((\xi, \eta)\)</span> that make the grid points cluster near the boundaries. These transforms are taken from the <a href="http://www.iitk.ac.in/tkic/workshop/FEM/ppt/Basics%20of%20Mesh%20Generation_SF%20Anwer.pdf">presentation</a> by Fahad sir (slide 25). The transforming function is reproduced here (Same function is used for both x and y directions):</p>
+<p><span class="math">\[2\xi = 1-\frac{ln\frac{\left(\beta+\frac{2y}{H}-1\right)}{\left(\beta-\frac{2y}{H}+1\right)}}{ln\frac{\beta+1}{\beta-1}}\label{wallclustering}\]</span></p>
+<p>The NSE in transformed coordinates is taken from this <a href="https://www.researchgate.net/profile/Sanjeev_Sanghi/publication/222406948_On_the_outflow_boundary_condition_for_external_incompressible_flows_A_new_approach/links/004635163a7b6ba62b000000.pdf">paper</a> by N. Hasan, S. F. Anwar and S. Sanghi (eqn. 28 and 29 in the paper). The transformed PDE's are reproduced here:</p>
+<p><span class="math">\[\frac{\partial u}{\partial t} + u^\xi\frac{\partial u}{\partial \xi} + u^\eta\frac{\partial u}{\partial \eta} = -\left(\frac{y_\eta}{J}\frac{\partial p}{\partial \xi}-\frac{y_\xi}{J}\frac{\partial p}{\partial \eta}\right) + \nu\left(\alpha \frac{\partial^2 u}{\partial \xi^2} -2\beta\frac{\partial^2 u}{\partial \xi \partial \eta} + \gamma \frac{\partial^2 u}{\partial \eta^2}\right)\]</span></p>
+<p><span class="math">\[\frac{\partial v}{\partial t} + u^\xi\frac{\partial v}{\partial \xi} + u^\eta\frac{\partial v}{\partial \eta} = -\left(-\frac{x_\eta}{J}\frac{\partial p}{\partial \xi}+\frac{x_\xi}{J}\frac{\partial p}{\partial \eta}\right) + \nu\left(\alpha \frac{\partial^2 v}{\partial \xi^2} -2\beta\frac{\partial^2 v}{\partial \xi \partial \eta} + \gamma \frac{\partial^2 v}{\partial \eta^2}\right)\]</span></p>
+<p>However, Fahad sir told me that this paper has made some approximation due to which some linear terms have dropped out from the expansion of laplacian. Therefore we added two extra terms to the laplaciane taken from Fahad sir's thesis. I am not sure if I am allowed to give the link to Fahad sir's thesis so I am just reproducing the final form of the NSE here:</p>
+<p><span class="math">\[\frac{\partial u}{\partial t} + u^\xi\frac{\partial u}{\partial \xi} + u^\eta\frac{\partial u}{\partial \eta} = -\left(\frac{y_\eta}{J}\frac{\partial p}{\partial \xi}-\frac{y_\xi}{J}\frac{\partial p}{\partial \eta}\right) + \nu\left(\alpha \frac{\partial^2 u}{\partial \xi^2} -2\beta\frac{\partial^2 u}{\partial \xi \partial \eta} + \gamma \frac{\partial^2 u}{\partial \eta^2} + \omega\frac{\partial u}{\partial \xi}+\phi\frac{\partial u}{\partial \eta}\right)\]</span></p>
+<p><span class="math">\[\frac{\partial v}{\partial t} + u^\xi\frac{\partial v}{\partial \xi} + u^\eta\frac{\partial v}{\partial \eta} = -\left(-\frac{x_\eta}{J}\frac{\partial p}{\partial \xi}+\frac{x_\xi}{J}\frac{\partial p}{\partial \eta}\right) + \nu\left(\alpha \frac{\partial^2 v}{\partial \xi^2} -2\beta\frac{\partial^2 v}{\partial \xi \partial \eta} + \gamma \frac{\partial^2 v}{\partial \eta^2} + \omega\frac{\partial v}{\partial \xi}+\phi\frac{\partial v}{\partial \eta}\right)\]</span></p>
+<p>Here the values of <span class="math">\(J, \alpha, \beta, \gamma, \omega, \phi, u^\xi, u^\eta\)</span> are: <span class="math">\[\alpha = \frac{y^2_\eta + x^2_\eta}{J^2}\]</span> <span class="math">\[\beta = \frac{y_\eta y_\xi + x_\eta x_\xi}{J^2}\]</span> <span class="math">\[\gamma = \frac{y^2_\xi + x^2_\eta}{J^2}\]</span> <span class="math">\[J = x_\xi y_\eta -x_\eta y_\xi\]</span> <span class="math">\[u^\xi = \frac{y_\eta}{J}u - \frac{x_\eta}{J}v\]</span> <span class="math">\[u^\eta = -\frac{y_\xi}{J}u + \frac{x_\xi}{J}v\]</span> <span class="math">\[\omega = \nabla_{xy}^2\xi\]</span> <span class="math">\[\phi = \nabla_{xy}^2 \eta\]</span></p>
+<h1 id="computational-scheme-on-non-uniform-grid">Computational scheme on non-uniform grid</h1>
+<p>With the transformed PDE's we apply the same pressure correction scheme as on the uniform grid. We use <span class="math">\(u^\xi\)</span> and <span class="math">\(u^\eta\)</span> for upwinding. The poisson solver uses Gauss-Seidel'ish approach with the expanded second derivative operator. I am not sure if this is correct (The Gauss-Seidel method works only if the spectral radius of laplacian operator is less than 1. I don't know if this holds in the transformed coordinates. Nevertheless, the poisson solver converges in finite time which must mean that this condition is satisfied).</p>
+<p>We apply two types of grid transformations to check the solver.</p>
+<h2 id="identity-transform">Identity transform</h2>
+<p>As a priliminary check we apply the identity transform i.e. (<span class="math">\(\xi=x\)</span> and <span class="math">\(\eta=y\)</span>) in our solver. In this case we get the same solution as on the uniform grid. These results are plotted here:</p>
+<div class="figure">
+<img src="uniformgrid_xieta_results.svg" alt="Figure: Solution on identity transform grid." /><p class="caption">Figure: Solution on identity transform grid.</p>
+</div>
+<h2 id="wall-clustering-transform">Wall clustering transform</h2>
+<p>Now we apply the wall clustering transform from eqn.(<span class="math">\(\ref{wallclustering}\)</span>) to the coordinates and the solver blows up after a few steps. The transformed grid is shown below:</p>
+<div class="figure">
+<img src="nonunigrid.svg" alt="Figure: non-uniform grid" /><p class="caption">Figure: non-uniform grid</p>
+</div>
+<p>The solution plotted below is on a non-uniform grid of dimensions [129 x 129].</p>
+<div class="figure">
+<img src="nonunigrid_results.svg" alt="Figure: non-uniform grid results" /><p class="caption">Figure: non-uniform grid results</p>
+</div>
+            </div>
+  </div>
+</body>
+</html>
