@@ -85,6 +85,15 @@
 <p>For poisson solver we use Jacobi Iteration. This is an iterative method that converges, given the spectral radius of the operator (the laplacian in this case) is less than 1. I have not checked what the spectral radius is for the laplacian operator in the transformed coordiantes. However the solver converges in finite number of steps, which I assume implies that the spectral radius must be less than 1.</p>
 <p>The laplacian in transformed coordinates is: <span class="math">\[\nabla^2 = \left(\alpha \frac{\partial^2 }{\partial \xi^2} -2\beta\frac{\partial^2 }{\partial \xi \partial \eta} + \gamma \frac{\partial^2 }{\partial \eta^2} + \omega\frac{\partial }{\partial \xi}+\phi\frac{\partial }{\partial \eta}\right)\]</span></p>
 <p>where the values of the coefficients are defined earlier starting from eqn. (<span class="math">\(\ref{alpha}\)</span>).</p>
+<p>To solve the poisson equation we discretize the derivatives using central differences and the coefficients are evaluated analytically. In this case, as seen from eqn.(<span class="math">\(\ref{wallclustering}\)</span>), the value of <span class="math">\(\beta\)</span> is zero everywhere so we drop that term.</p>
+<p><span class="math">\[\nabla^2 = \left(\alpha \frac{\partial^2 }{\partial \xi^2} + \gamma \frac{\partial^2 }{\partial \eta^2} + \omega\frac{\partial }{\partial \xi}+\phi\frac{\partial }{\partial \eta}\right)\]</span></p>
+<p>Then discretizing the derivatives and noticing that <span class="math">\(\Delta \xi = \Delta \eta = \Delta\)</span> we get:</p>
+<p><span class="math">\[\nabla^2 f= \left(\alpha \frac{f_{i+1} -2f_i + f_{i-1}}{\Delta^2} + \gamma \frac{f_{j+1} -2f_j + f_{j-1}}{\Delta^2} + \omega\frac{f_{i+1}-f_{i-1} }{2\Delta}+\phi\frac{f_{j+1}-f_{j-1}}{ 2\Delta}\right)\]</span></p>
+<p>So in order to solve for the poisson equation: <span class="math">\[\nabla^2 f = \rho\]</span></p>
+<p>We use the following (noting that <span class="math">\(f_i=f_j=f_{i,j}\)</span>): <span class="math">\[\left(\alpha \frac{f_{i+1} -2f_i + f_{i-1}}{\Delta^2} + \gamma \frac{f_{j+1} -2f_j + f_{j-1}}{\Delta^2} + \omega\frac{f_{i+1}-f_{i-1} }{2\Delta}+\phi\frac{f_{j+1}-f_{j-1}}{ 2\Delta}\right)=\rho_{i,j}\]</span></p>
+<p><span class="math">\[2\left(\alpha+\gamma\right)f_{i,j}=\Delta^2\left(\alpha \frac{f_{i+1} + f_{i-1}}{\Delta^2} + \gamma \frac{f_{j+1} + f_{j-1}}{\Delta^2} + \omega\frac{f_{i+1}-f_{i-1} }{2\Delta}+\phi\frac{f_{j+1}-f_{j-1}}{ 2\Delta}\right)-\Delta^2\rho_{i,j}\]</span></p>
+<p><span class="math">\[f_{i,j}=\left(\alpha \frac{f_{i+1} + f_{i-1}}{2\left(\alpha+\gamma\right)} + \gamma \frac{f_{j+1} + f_{j-1}}{2\left(\alpha+\gamma\right)} + \omega\Delta\frac{f_{i+1}-f_{i-1} }{4\left(\alpha+\gamma\right)}+\phi\Delta\frac{f_{j+1}-f_{j-1}}{ 4\left(\alpha+\gamma\right)}\right)-\frac{\Delta^2}{2\left(\alpha+\gamma\right)}\rho_{i,j}\]</span></p>
+<p>Now, we use this expression in jacobi iteration to get the solution for <span class="math">\(f_{i,j}\)</span>.</p>
             </div>
   </div>
 </body>
