@@ -3,11 +3,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent }   from './app.component';
 import { DonutComponent } from './app.donutcomponent';
 import { ZoneLabelComponent } from './app.zonelabelcomponent';
+import { DeltaComponent } from './app.deltacomponent';
+import { FormsModule } from '@angular/forms';
+import { WidgetControls } from './app.widgetcontrols';
 @NgModule({
-  imports:      [ BrowserModule ],
+  imports:      [ BrowserModule,
+                  FormsModule
+                ],
   declarations: [ AppComponent,
                   DonutComponent,
-                  ZoneLabelComponent
+                  ZoneLabelComponent,
+                  DeltaComponent,
+                  WidgetControls
                 ],
   bootstrap:    [ AppComponent ]
 })
