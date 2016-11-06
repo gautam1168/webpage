@@ -8,14 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require("@angular/core");
+var core_1 = require('@angular/core');
 var AppComponent = (function () {
     function AppComponent() {
         this.bgcolor = "#202022";
         this.dconf = {
             x: "50", y: "50", r1: "25", r2: "35",
             fill: "white", centerfill: this.bgcolor,
-            arclength: 60, strokecolor: "#82EAAF"
+            arclength: 120, strokecolor: "#82EAAF"
         };
         this.zconf = [
             { start: 0, end: 20, x: 100, width: 99, fill: "#009581" },
@@ -37,14 +37,15 @@ var AppComponent = (function () {
         this.dconf.x = "50";
         this.dconf.y = "50";
     };
+    AppComponent = __decorate([
+        core_1.Component({
+            selector: 'my-app',
+            template: "<h1>My First Angular App</h1>\n\t  \t\t<div>\n\t\t\t\t    <svg attr.width={{conf.width}} attr.height={{conf.height}}\n                  [attr.viewBox]=\"conf.viewbox\"\n\t\t\t\t \t        [style.background-color]=\"conf.bgcolor\">\n                  <g donut-chart [conf]=\"dconf\"></g>\n                  <g zone-label [rectconfs]=\"zconf\"></g>\n\t\t\t\t    </svg>\n\t     \t</div>\n        <div class=\"formcontainer\">\n          <widget-controls [conf]=\"dconf\"></widget-controls>\n        </div>\n\t    \t",
+            styles: ["\n              .formcontainer{\n                padding: 20px;\n              }\n           "]
+        }), 
+        __metadata('design:paramtypes', [])
+    ], AppComponent);
     return AppComponent;
 }());
-AppComponent = __decorate([
-    core_1.Component({
-        selector: 'my-app',
-        template: "<h1>My First Angular App {{metervalue}} fs</h1>\n\t  \t\t<div>\n\t\t\t\t    <svg attr.width={{conf.width}} attr.height={{conf.height}}\n                  [attr.viewBox]=\"conf.viewbox\"\n\t\t\t\t \t        [style.background-color]=\"conf.bgcolor\">\n                  <g donut-chart [conf]=\"dconf\"></g>\n                  <g zone-label [rectconfs]=\"zconf\"></g>\n\t\t\t\t    </svg>\n\t     \t</div>\n\t    \t"
-    }),
-    __metadata("design:paramtypes", [])
-], AppComponent);
 exports.AppComponent = AppComponent;
 //# sourceMappingURL=app.component.js.map

@@ -1,4 +1,10 @@
 "use strict";
+var DeltaConf = (function () {
+    function DeltaConf() {
+    }
+    return DeltaConf;
+}());
+exports.DeltaConf = DeltaConf;
 var ZoneConf = (function () {
     function ZoneConf() {
     }

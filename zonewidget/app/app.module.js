@@ -13,15 +13,22 @@ var platform_browser_1 = require('@angular/platform-browser');
 var app_component_1 = require('./app.component');
 var app_donutcomponent_1 = require('./app.donutcomponent');
 var app_zonelabelcomponent_1 = require('./app.zonelabelcomponent');
+var app_deltacomponent_1 = require('./app.deltacomponent');
+var forms_1 = require('@angular/forms');
+var app_widgetcontrols_1 = require('./app.widgetcontrols');
 var AppModule = (function () {
     function AppModule() {
     }
     AppModule = __decorate([
         core_1.NgModule({
-            imports: [platform_browser_1.BrowserModule],
+            imports: [platform_browser_1.BrowserModule,
+                forms_1.FormsModule
+            ],
             declarations: [app_component_1.AppComponent,
                 app_donutcomponent_1.DonutComponent,
-                app_zonelabelcomponent_1.ZoneLabelComponent
+                app_zonelabelcomponent_1.ZoneLabelComponent,
+                app_deltacomponent_1.DeltaComponent,
+                app_widgetcontrols_1.WidgetControls
             ],
             bootstrap: [app_component_1.AppComponent]
         }), 
