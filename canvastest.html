@@ -1,0 +1,159 @@
+<html>
+	<head>
+	</head>
+	<body>
+		<canvas width=500 height=500 style="border: solid 1px #ccc;"
+				onmousedown="handlemousedown(event)"
+				onmousemove="handlemousemove(event)"
+				onmouseup="handlemouseup(event)"></canvas>
+		<script>
+
+
+			var canvas = document.querySelectorAll('canvas')[0];
+			window.ctx = canvas.getContext('2d');
+			window.ctxstate = {
+				curvestart: null,
+				segments: []
+			};
+
+			function handlemousedown(evt){
+				window.ctxstate.mouseisdown = true;
+				if (window.ctxstate.curvestart == null){
+					window.ctxstate.curvestart = true
+				}
+				else{
+					window.ctxstate.curvestart = !window.ctxstate.curvestart;
+				}
+				if (!window.ctxstate.curvestart){
+					window.ctxstate.curveEnd = {
+						x: evt.offsetX,
+						y: evt.offsetY
+					}
+				}
+				else{
+					window.ctxstate.curveBegin = {
+						x: evt.offsetX,
+						y: evt.offsetY
+					}
+				}
+			}
+
+			function handlemousemove(evt){
+				if (window.ctxstate.mouseisdown && !window.ctxstate.curvestart){
+
+					var endpoint = {
+						x: 2*window.ctxstate.curveEnd.x - evt.offsetX,
+						y: 2*window.ctxstate.curveEnd.y - evt.offsetY
+					}
+					window.ctxstate.endpoint = endpoint
+					ctx.clearRect(0, 0, 500, 500)
+					ctx.beginPath()
+					ctx.moveTo(endpoint.x, endpoint.y)
+					ctx.strokeStyle="#000000"
+					ctx.lineTo(evt.offsetX, evt.offsetY)
+					ctx.stroke()
+
+					ctx.beginPath()
+					ctx.moveTo(window.ctxstate.curveBegin.x, window.ctxstate.curveBegin.y)
+					ctx.strokeStyle="#ff0000"
+					ctx.quadraticCurveTo(endpoint.x, endpoint.y,
+									  window.ctxstate.curveEnd.x, window.ctxstate.curveEnd.y
+								  	  )
+					ctx.stroke()
+				}
+				else if (!window.ctxstate.mouseisdown){
+					ctx.clearRect(0, 0, 500, 500)
+					ctx.beginPath()
+					ctx.moveTo(window.ctxstate.curveBegin.x, window.ctxstate.curveBegin.y)
+					ctx.lineTo(evt.offsetX, evt.offsetY)
+					ctx.stroke()
+				}
+
+			}
+
+			function handlemouseup(evt) {
+				window.ctxstate.mouseisdown = false
+				if (!window.ctxstate.curvestart){
+					window.ctxstate.segments.push({
+						start: Object.assign({}, window.ctxstate.curveBegin),
+						end: Object.assign({}, window.ctxstate.curveEnd),
+						ctrlpoint: Object.assign({}, window.ctxstate.endpoint)
+					})
+					ctx.clearRect(0, 0, 500, 500)
+					ctx.moveTo(window.ctxstate.segments[0].start.x,
+								window.ctxstate.segments[0].start.y)
+
+					window.ctxstate.segments.forEach((line)=>{
+						ctx.quadraticCurveTo(line.ctrlpoint.x, line.ctrlpoint.y,
+												line.end.x, line.end.y)
+					})
+					ctx.stroke()
+				}
+			}
+			// ctx2.beginPath()
+			// ctx2.moveTo(50, 50)
+			// ctx2.bezierCurveTo(150, 150, 100, 10, 400, 400)
+			// ctx2.stroke()
+			//
+			// window.lines = []
+			// window.currline = {}
+			// canvas.addEventListener("mousedown", function(evt){
+			// 	window.currline = window.currline || {}
+			// 	if (window.currline.start == undefined){
+			// 		window.currline.start = {x: evt.offsetX, y: evt.offsetY}
+			// 		console.log("Setting start: ", window.currline.start)
+			// 	}
+			// 	else if (window.currline.end == undefined){
+			// 		window.currline.end = {x: evt.offsetX, y: evt.offsetY}
+			// 		console.log("Setting end: ", window.currline.end)
+			// 	}
+			// 	else{
+			// 		delete window.currline
+			// 		console.log("Deleting currline")
+			// 	}
+			// 	window.mouseisdown = true
+			// })
+			// canvas.addEventListener("mousemove", function(evt){
+			// 	if (window.mouseisdown && window.currline != undefined && window.currline.end != undefined){
+			// 		ctx2.clearRect(0, 0, 500, 500)
+			// 		ctx2.beginPath()
+			// 		py = window.currline.end.y - evt.offsetY
+			// 		px = window.currline.end.x - evt.offsetX
+			// 		ctx2.moveTo(px, py)
+			// 		ctx2.lineTo(evt.offsetX, evt.offsetY)
+			// 		ctx2.moveTo(window.currline.start.x, window.currline.start.y)
+			//
+			// 		window.currline.controlline = {
+			// 			px1: px, py1: py, px2: evt.offsetX, py2: evt.offsetY
+			// 		}
+			// 		ctx2.bezierCurveTo(px, py, evt.offsetX, evt.offsetY,
+			// 						window.currline.end.x, window.currline.end.x)
+			// 		ctx2.stroke()
+			// 	}
+			//
+			// 	else if (window.currline != undefined && window.currline.start != undefined){
+			// 		ctx2.clearRect(0, 0, 500, 500)
+			// 		ctx2.beginPath()
+			// 		ctx2.moveTo(window.currline.start.x, window.currline.start.y)
+			// 		ctx2.lineTo(evt.offsetX, evt.offsetY)
+			// 		ctx2.stroke()
+			// 	}
+			// })
+			// canvas.addEventListener("mouseup", function(evt){
+			// 	if (window.currline != undefined && window.currline.end != undefined){
+			// 		ctx2.clearRect(0, 0, 500, 500)
+			// 		ctx2.beginPath()
+			// 		ctx2.moveTo(window.currline.start.x, window.currline.start.y)
+			// 		ctx2.lineTo(evt.offsetX, evt.offsetY)
+			// 		ctx2.moveTo(window.currline.start.x, window.currline.start.y)
+			// 		py = window.currline.end.y - offsetY
+			// 		px = window.currline.end.x - offsetX
+			// 		ctx2.bezierCurveTo(px, py, evt.offsetX, evt.offsetY,
+			// 						window.currline.end.x, window.currline.end.x)
+			// 		ctx2.stroke()
+			// 	}
+			// 	window.mousedown = false
+			// })
+		</script>
+	</body>
+</html>
