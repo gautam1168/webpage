@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>Notes</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.7.3/showdown.min.js"></script>
+    </head>
+    <body>
+        <div id="doc"></div>
+        <script>
+            let doc = `
+# Rules of naming
+1. Names should reveal intention
+2. Names should be pronounciable
+
+# Rules for making functions
+1. Functions should be small (~20 lines max)
+2. Names of functions should be verbs
+3. Functions shouldn't take more than 2 arguments
+
+# Rules for writing comments
+1. Only write comments when you cannot say it in code
+2. Don't make javadocs for non public functions
+
+# Rules for writing classes
+1. They should be small. 
+2. They should be cohesive.
+            `
+            let div = document.querySelector('div#doc');
+            let converter = new showdown.Converter();
+            div.innerHTML = converter.makeHtml(doc);
+        </script>
+    </body>
+</html>
