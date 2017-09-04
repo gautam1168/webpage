@@ -5,11 +5,24 @@
     </head>
     <body>
         <div id="doc"></div>
-        <script>
-            let doc = `
+        <div id="input">
 # Rules of naming
-1. Names should reveal intention
-2. Names should be pronounciable
+1. Function names should be verbs and class names should be nouns
+```javascript
+    class Graph {
+        private graphConfiguration: Object;
+        private eventQueue: Array<string>;
+        constructor() {}
+        render() {}
+        addEventListener() {}
+    }
+```
+2. Each concept should have one name and one name only
+3. Say what you mean and mean what you say (don't pun or be cute)
+4. Take time to differentiate names when conflicts arise
+5. Don't encode 
+6. Add context but not too much
+7. Don't use noise words like abcManager or xyzData in names
 
 # Rules for making functions
 1. Functions should be small (~20 lines max)
@@ -23,9 +36,15 @@
 # Rules for writing classes
 1. They should be small. 
 2. They should be cohesive.
-            `
+        </div>
+        <script>
+            let input = document.querySelector('div#input');
+            let doc = input.innerHTML;
+            document.body.removeChild(input);
             let div = document.querySelector('div#doc');
-            let converter = new showdown.Converter();
+            let converter = new showdown.Converter({
+                github_flavouring: true
+            });
             div.innerHTML = converter.makeHtml(doc);
         </script>
     </body>
