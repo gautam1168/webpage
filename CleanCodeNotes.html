@@ -1,0 +1,167 @@
+
+<html>
+    <head>
+        <title>Notes</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.7.3/showdown.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="doc"></div>
+        <code id="input">
+# Rules of naming
+## Function are verbs
+Functions are 'called' to do stuff. In a piece of code they read the best if you name them with verbs. Every function should name an action and it should perform that action and do nothing more. If you cannot sumarize what the function does in its name, then split it till you can.
+```javascript
+  class SVGPainter {
+    private svgElement;
+
+    bindDrawingContext( svgElement: DomElement) {
+      this.svgElement = svgElement;
+    }
+
+    renderStaticElements( chartConf: Chart ) {
+      this.drawAxes(chartConf.axes);
+      this.drawBackgroundGrid(chartConf.backGrid);
+    }
+
+    drawAxes(axes: Axes) {
+      this.drawXAxis(axes.x);
+      this.drawYAxis(axes.y);
+    }
+
+    drawXAxis(axis: Axis) {
+      this.drawLine(axis.line);
+      line.tics.forEach(tick => {
+        this.drawLine(tick.markline);
+        this.drawText(tick.label);
+      });
+    }
+  }
+```
+
+## Classes are nouns
+Classes are instantiated. They work best if they are named with nouns. Think of good class names that give a very good idea of what methods one can expect in its instance. Don't use noise words like `Manager` or `Info` in classnames.
+```javascript
+//Bad class names
+class EmployeeInfo {}
+//Perhaps a better name is found by removing the noise word
+class Employee {}
+//Or adding more context
+class EmployeeTaxStatement {}
+
+//All the methods in SVGPainter feel right if we rename it to ChartPainter
+let painter = new ChartPainter();
+painter.bindDrawingContext(element);
+painter.renderStaticElements(chart);
+```
+## One name per concept
+The job of a programmer is to take the vague ideas of the client and distill the essence in a language that is mathematically and logically sound and consistent. Like physicists we have to cut through all the clutter and noise to reach the basic essence of a problem. While doing this, we have to identify a lot of actions and entities and name them. In addition to choosing the right kind of words (verbs/nouns) we must also take care to ensure that the mappings that we make *one to one* mappings between the vocabulary we invent and the concepts we name.
+
+In the ChartPainter both `render` and `draw` refer to the same action, which is bad.
+```javascript
+//Bad because both render and draw are being used to mean the same thing
+painter.renderStaticElements(chart);
+painter.drawAxes(chart.axes);
+```
+## Say what you mean and mean what you say
+Do not use slang words or puns in the code.
+```javascript
+class AnimatedChart {
+   constructor() {}
+   //These are bad names as only some people will understand them
+   beginDancing() {}
+   killTheParty() {}
+
+   //These are better
+   startAnimation() {}
+   stopAnimation() {}
+}
+```
+## Conflicts mean you need to rethink the names
+If you find a situation where the name you want to give to something is already taken, then that just means that either you are choosing a bad name or the other person did. Since every concept is named exactly after what it does or is, there should be no conflicts. If they do arise, re-evaluate the naming choices and clean the code.
+```javascript
+    class ChartData {
+        private axes: Axes;
+        private backgroundGrid: BGrid;
+    }
+
+    class ChartDatum {
+        private xaxisCoords: number[];
+        private yaxisCoords: number[];
+    }
+
+    //A better way would probably be to merge the two classes.
+    //Or rename them as follows
+    class ChartStructuralElementsData {}
+    class ChartPlotData {}
+```
+## Don't encode
+Don't encode extra information in the names. This is because as the code evolves people will forget to change the encoding. So, don't add a `List` suffix or `_` prefix. It is not wrong to use these modifiers to clarify the type of the entity but keep in mind that in doing so you are increasing the maintenance overhead.
+```javascript
+function getWidgets() {
+  let widgets = {};
+  for (widgetName of window.dashboard.widgetNames) {
+     widget[widgetName] = { id: getUUid() }
+  }
+  return widget;
+}
+
+//Here the function to getWidgets has evolved and is now returning objects instead of list.
+//But the user of the function didn't update his variable which will cause confusions like this
+let widgetList = getWidgets();
+let firstwidId = Object.keys(widgetList)[0]
+```
+## Add context but not too much
+Don't add gratuitous context to names.
+```javascript
+//The PRD in all these names is bad.
+class PRDDashboard{}
+class PRDWidget{}
+class PRDFilter{}
+```
+There was no need to prefix everything with PRD! What else would the Dashboard belong to when it is inside the PRD codebase?! Look out for these "You don't say!" moments and avoid them.
+
+At the same time you should provide context by adding things to names or grouping names in classes or interfaces whereever necessary.
+
+```javascript
+//In this function the arguments for drawBox have no context. They are just numbers.
+drawBox(xpos, ypos, rowspan, colspan);
+
+//This is better
+drawBox(widget.xpos, widget.ypos, widget.rowspan, widget.colspan);
+
+//This is even better than the last
+drawBox(widget);
+```
+
+# Rules for making functions
+1. Functions should be small (~20 lines max)
+2. Names of functions should be verbs
+3. Functions shouldn't take more than 2 arguments
+
+# Rules for writing comments
+1. Only write comments when you cannot say it in code
+2. Don't make javadocs for non public functions
+
+# Rules for writing classes
+1. They should be small.
+2. They should be cohesive.
+        </code>
+        <script>
+            let input = document.querySelector('code#input');
+            let doc = input.innerHTML;
+            document.body.removeChild(input);
+            let div = document.querySelector('div#doc');
+            let converter = new showdown.Converter({
+                github_flavouring: true
+            });
+            div.innerHTML = decodeHtml(converter.makeHtml(doc));
+            hljs.initHighlightingOnLoad();
+            function decodeHtml(text) {
+                text = text.replace(/&amp;/g, '&');
+                return text.replace(/&gt;/g, '>');
+            }
+        </script>
+    </body>
+</html>
