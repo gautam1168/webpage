@@ -1,0 +1,64 @@
+{
+	"program": {
+		"kind": {
+				"values": ["FLUID_INCOMPRESS", "RBC"],
+				"description": "<h3 class='textwhite'> kind </h3>The following types of calculations are possible in TARANG:<ul><li><span class='textwhite'>FLUID_INCOMPRESS:</span> This is the case where nu is 0 and boundary conditions are periodic.</li><li><span class='textwhite'>RBC:</span> This simulates a fluid between two plates and the end result is convection rolls.</li></ul>"
+				},
+		"basis_type": {
+				"values": ["SSS", "FFF"],
+				"description": "<h3 class='textwhite'> basis_type </h3>Basis types determine the geometry of the calculation: <ul><li><span class='textwhite'>FFF : </span>All three directions are the fourier basis in this case, making it completely periodic.</li><li><span class='textwhite'>SSS : </span>All three directions are the non-fourier basis in this case, making it a bounded box.</li></ul>"
+				},
+		"decomposition": {
+				"values": ["PENCIL", "SLAB"],
+				"description": "<h3> kind </h3>"
+				},
+		"iter_or_diag": {
+				"values": ["ITERATION", "DIAGNOSTICS"],
+				"description": "<h3> kind </h3>"
+				},
+		"alias_option": {
+				"values": ["DELAIAS", "NONE"],
+				"description": "<h3> kind </h3>"
+				},
+		"integration_scheme": {
+				"values": ["EULER", "RK4"],
+				"description": "<h3> kind </h3>"
+				},
+		"LES_switch": {
+				"values": [true, false],
+				"description": "<h3> kind </h3>"
+				},
+		"apply_strong_realitycond_alltime_switch": {
+				"values": [true, false],
+				"description": "<h3> kind </h3>"
+				},
+		"apply_weak_realitycond_alltime_switch": {
+				"values": [true, false],
+				"description": "<h3> kind </h3>"
+				},
+		"low_dimension_switch": {
+				"values": [true, false],
+				"description": "<h3> kind </h3>"
+				},
+		"two_and_half_dimension": {
+				"values": [true, false],
+				"description": "<h3> kind </h3>"
+				},
+		"two_dimension": {
+				"values": [true, false],
+				"description": "<h3> kind </h3>"
+				},
+		"dt_option": {
+				"values": [0, 1],
+				"description": "<h3> kind </h3>"
+				},
+		"helicity_switch": {
+				"values": [true, false],
+				"description": "<h3> kind </h3>"
+				},
+		"sincostr_switch": {
+				"values": ["SSS", "FFF"],
+				"description": "<h3> kind </h3>"
+				}
+	}
+}
