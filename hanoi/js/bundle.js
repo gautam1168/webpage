@@ -147026,19 +147026,21 @@ var GameOfLifeScene = function (_Phaser$Scene) {
 			var W = this.W,
 			    H = this.H;
 
-			var tube = this.add.sprite(leftoffset * W, 0.68 * H, 'tube');
+			var topOffset = 0.6;
+
+			var tube = this.add.sprite(leftoffset * W, (topOffset - 0.02) * H, 'tube');
 			tube.setDisplaySize(tube.width, 1.1 * tube.height);
 
-			var base = this.matter.add.rectangle(leftoffset * W, 0.7 * H + 0.5 * tube.height + 10, tube.width, 20);
+			var base = this.matter.add.rectangle(leftoffset * W, topOffset * H + 0.5 * tube.height + 10, tube.width, 20);
 			base.isStatic = true;
 
-			var leftwall = this.matter.add.rectangle(leftoffset * W - 0.5 * tube.width - 10, 0.7 * H, 20, tube.height);
+			var leftwall = this.matter.add.rectangle(leftoffset * W - 0.5 * tube.width - 10, topOffset * H, 20, tube.height);
 			leftwall.isStatic = true;
 
-			var rightwall = this.matter.add.rectangle(leftoffset * W + 0.5 * tube.width + 10, 0.7 * H, 20, tube.height);
+			var rightwall = this.matter.add.rectangle(leftoffset * W + 0.5 * tube.width + 10, topOffset * H, 20, tube.height);
 			rightwall.isStatic = true;
 
-			var target = this.add.sprite(leftoffset * W, 0.68 * H - tube.height * 0.7, 'target');
+			var target = this.add.sprite(leftoffset * W, (topOffset - 0.02) * H - tube.height * 0.7, 'target');
 			target.setInteractive();
 			target.on('pointerdown', function (pointer) {
 				console.log(pointer);
