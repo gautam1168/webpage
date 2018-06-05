@@ -1,8 +1,39 @@
 <html>
 	<head>
 		<title>Topcoder POC</title>
+		<script
+  			src="https://code.jquery.com/jquery-3.3.1.min.js"
+  			integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  			crossorigin="anonymous"></script>
 	</head>
 	<body>
-		<h1>Redirect URL for Topcoder POC</h1>
+		<h1>Add apps to monitor</h1>
+		<ul>
+			<li><a id="github" href="#">Github</a></li>
+		</ul>
+		<input id="code" placeholder="code"/>
+		<button id="gettoken">GetToken</button>
+<script>
+$("a#github").on('click', function() {
+	$.ajax({
+		url: 'https://github.com/login/oauth/authorize',
+		type: 'GET',
+		'client_id': '162f662aad695d3ed4f4'
+	});
+})
+
+$("button#gettoken").on('click', function() {
+	var code = $("input#code").val();
+	$.ajax({
+		url: 'https://github.com/login/oauth/access_token',
+		type: 'POST',
+		'client_id': '162f662aad695d3ed4f4',
+		'client_secret': '902a9b470f6ca2b8366448196b4eafe0c894e7cc',
+		code: code
+	}).then(res => {
+		console.log(res);
+	}); 
+});
+</script>
 	</body>
 </html>
