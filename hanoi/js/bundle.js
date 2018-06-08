@@ -147106,11 +147106,49 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Board = function () {
+	function Board() {
+		_classCallCheck(this, Board);
+
+		this.player = 1;
+		this.balls = new Array(20).fill(0).map(function (e) {
+			return new Array(20).fill(0);
+		});
+		this.ballkeys = {
+			1: 'redball',
+			2: 'blueball',
+			3: 'greenball',
+			4: 'yellowball'
+		};
+	}
+
+	_createClass(Board, [{
+		key: 'setAt',
+		value: function setAt(x, y) {
+			//If box is full don't set anything
+			console.log(this.balls);
+			if (this.balls[x][y] != 0) {
+				return null;
+			}
+			this.balls[x][y] = this.player;
+			var imagekey = this.ballkeys[this.player];
+			if (this.player == 4) {
+				this.player = 1;
+			} else {
+				this.player += 1;
+			}
+			return { x: x * 42 + 21, y: y * 42 + 21, key: imagekey };
+		}
+	}]);
+
+	return Board;
+}();
 
 var ChainreactionScene = function (_Phaser$Scene) {
 	_inherits(ChainreactionScene, _Phaser$Scene);
@@ -147126,6 +147164,9 @@ var ChainreactionScene = function (_Phaser$Scene) {
 		_this.H = window.innerHeight;
 		_this.numbers = [];
 		_this.map = null;
+		_this.board = new Board();
+		window.board = _this.board;
+		_this.updatingBallImage = false;
 		return _this;
 	}
 
@@ -147135,6 +147176,9 @@ var ChainreactionScene = function (_Phaser$Scene) {
 			this.load.image('background', 'assets/stack/background.png');
 			this.load.image('base', 'assets/images/chainreactionBase.png');
 			this.load.image('greenball', 'assets/images/greenball.png');
+			this.load.image('blueball', 'assets/images/blueball.png');
+			this.load.image('redball', 'assets/images/redball.png');
+			this.load.image('yellowball', 'assets/images/yellowball.png');
 		}
 	}, {
 		key: 'create',
@@ -147144,19 +147188,22 @@ var ChainreactionScene = function (_Phaser$Scene) {
 			var layer = this.map.createBlankDynamicLayer('layer', tiles);
 			layer.fill(0, 0, 0, this.map.width, this.map.height);
 			layer = this.map.convertLayerToStatic(layer);
-			window.layer = layer;
-			var ball = this.add.image(21, 21, 'greenball');
+			// window.layer = layer;
+			// let ball = this.add.image(21, 21, 'greenball');
 			// layer.setScale(3)
 		}
 	}, {
 		key: 'update',
 		value: function update(time, delta) {
-			if (this.input.manager.activePointer.isDown) {
+			if (this.input.manager.activePointer.isDown && !this.updatingBallImage) {
+				this.updatingBallImage = true;
 				var worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
 				var pointerTileX = this.map.worldToTileX(worldPoint.x);
 				var pointerTileY = this.map.worldToTileY(worldPoint.y);
-
-				this.add.image(pointerTileX * 42 + 21, pointerTileY * 42 + 21, 'greenball');
+				var conf = this.board.setAt(pointerTileX, pointerTileY);
+				console.log(conf);
+				if (conf) this.add.image(conf.x, conf.y, conf.key);
+				this.updatingBallImage = false;
 			}
 		}
 	}]);

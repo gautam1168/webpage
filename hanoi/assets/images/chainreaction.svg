@@ -25,15 +25,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6"
-     inkscape:cx="327.46068"
-     inkscape:cy="602.538"
+     inkscape:zoom="3.959798"
+     inkscape:cx="242.61174"
+     inkscape:cy="549.19341"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1440"
      inkscape:window-height="802"
-     inkscape:window-x="11"
+     inkscape:window-x="14"
      inkscape:window-y="0"
      inkscape:window-maximized="0" />
   <metadata
@@ -44,7 +44,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -53,7 +53,8 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       id="g874">
+       id="g874"
+       transform="translate(-7.9375,-25.702381)">
       <rect
          inkscape:export-ydpi="66.674995"
          inkscape:export-xdpi="66.674995"
@@ -75,30 +76,11 @@
          x="39.299133"
          y="183.47174" />
     </g>
-    <rect
-       inkscape:export-ydpi="66.674995"
-       inkscape:export-xdpi="66.674995"
-       y="122.67522"
-       x="72.429688"
-       height="16"
-       width="16"
-       id="rect876"
-       style="opacity:1;fill:#4a4a4d;fill-opacity:1;stroke:none;stroke-width:0.16076663;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.9953052" />
-    <rect
-       inkscape:export-ydpi="66.674995"
-       inkscape:export-xdpi="66.674995"
-       rx="1.1565043"
-       ry="1.3667777"
-       style="opacity:1;fill:#6d6d6d;fill-opacity:1;stroke:none;stroke-width:0.14578387;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.9953052"
-       id="rect878"
-       width="14.508871"
-       height="14.508871"
-       x="73.175247"
-       y="123.42078" />
     <g
        id="g896"
        inkscape:export-xdpi="66.674995"
-       inkscape:export-ydpi="66.674995">
+       inkscape:export-ydpi="66.674995"
+       transform="translate(-12.451579,21.131937)">
       <circle
          r="5.6696429"
          cy="134.04501"
@@ -111,7 +93,61 @@
          height="16"
          width="16"
          id="rect886"
-         style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:0.357;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:0.35699999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="g830"
+       inkscape:export-xdpi="66.674995"
+       inkscape:export-ydpi="66.674995">
+      <rect
+         style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:0.35699999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect822"
+         width="16"
+         height="16"
+         x="61.451645"
+         y="127.96689" />
+      <circle
+         style="opacity:1;fill:#ff6b5f;fill-opacity:1;stroke:none;stroke-width:0.35699999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.9953052"
+         id="circle820"
+         cx="69.478554"
+         cy="135.77303"
+         r="5.6696429" />
+    </g>
+    <g
+       id="g842"
+       inkscape:export-xdpi="66.674995"
+       inkscape:export-ydpi="66.674995">
+      <rect
+         y="135.65089"
+         x="35.526501"
+         height="16"
+         width="16"
+         id="rect832"
+         style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:0.35699999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <circle
+         r="5.6696429"
+         cy="143.45703"
+         cx="43.55341"
+         id="circle834"
+         style="opacity:1;fill:#5f90ff;fill-opacity:1;stroke:none;stroke-width:0.35699999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.9953052" />
+    </g>
+    <g
+       id="g854"
+       inkscape:export-xdpi="66.674995"
+       inkscape:export-ydpi="66.674995">
+      <rect
+         style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:0.35699999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect844"
+         width="16"
+         height="16"
+         x="54.034916"
+         y="148.41301" />
+      <circle
+         style="opacity:1;fill:#ffc05f;fill-opacity:1;stroke:none;stroke-width:0.35699999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.9953052"
+         id="circle846"
+         cx="62.061825"
+         cy="156.21915"
+         r="5.6696429" />
     </g>
   </g>
 </svg>
