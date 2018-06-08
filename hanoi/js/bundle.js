@@ -147121,29 +147121,46 @@ var Board = function () {
 			return new Array(20).fill(0);
 		});
 		this.ballkeys = {
-			1: 'redball',
-			2: 'blueball',
-			3: 'greenball',
-			4: 'yellowball'
+			1: ['redball', 'reddoublet'],
+			2: ['blueball', 'bluedoublet'],
+			3: ['greenball', 'greendoublet'],
+			4: ['yellowball', 'yellowdoublet']
 		};
 	}
 
 	_createClass(Board, [{
 		key: 'setAt',
 		value: function setAt(x, y) {
-			//If box is full don't set anything
-			console.log(this.balls);
-			if (this.balls[x][y] != 0) {
-				return null;
+			var imagekey = void 0;
+			if (this.balls[x][y] == 0) {
+				imagekey = this.ballkeys[this.player][0];
+				this.balls[x][y] = imagekey;
+			} else {
+				var conf = this.getCellconfiguration(x, y);
+				if (this.player == conf.player) {
+					imagekey = this.ballkeys[this.player][conf.keyindex + 1];
+					this.balls[x][y] = imagekey;
+				}
 			}
-			this.balls[x][y] = this.player;
-			var imagekey = this.ballkeys[this.player];
 			if (this.player == 4) {
 				this.player = 1;
 			} else {
 				this.player += 1;
 			}
 			return { x: x * 42 + 21, y: y * 42 + 21, key: imagekey };
+		}
+	}, {
+		key: 'getCellconfiguration',
+		value: function getCellconfiguration(x, y) {
+			var key = this.balls[x][y];
+			var players = Object.keys(this.ballkeys);
+			for (var i = 0; i < players.length; i++) {
+				var player = players[i];
+				var keyindex = this.ballkeys[player].indexOf(key);
+				if (keyindex >= 0) {
+					return { player: player, keyindex: keyindex };
+				}
+			}
 		}
 	}]);
 
@@ -147165,8 +147182,9 @@ var ChainreactionScene = function (_Phaser$Scene) {
 		_this.numbers = [];
 		_this.map = null;
 		_this.board = new Board();
-		window.board = _this.board;
-		_this.updatingBallImage = false;
+		_this.ballimages = new Array(20).fill(0).map(function (e) {
+			return new Array(20).fill(null);
+		});
 		return _this;
 	}
 
@@ -147179,6 +147197,10 @@ var ChainreactionScene = function (_Phaser$Scene) {
 			this.load.image('blueball', 'assets/images/blueball.png');
 			this.load.image('redball', 'assets/images/redball.png');
 			this.load.image('yellowball', 'assets/images/yellowball.png');
+			this.load.image('greendoublet', 'assets/images/greendoublet.png');
+			this.load.image('bluedoublet', 'assets/images/bluedoublet.png');
+			this.load.image('reddoublet', 'assets/images/reddoublet.png');
+			this.load.image('yellowdoublet', 'assets/images/yellowdoublet.png');
 		}
 	}, {
 		key: 'create',
@@ -147195,15 +147217,18 @@ var ChainreactionScene = function (_Phaser$Scene) {
 	}, {
 		key: 'update',
 		value: function update(time, delta) {
-			if (this.input.manager.activePointer.isDown && !this.updatingBallImage) {
+			if (this.input.manager.activePointer.justUp) {
 				this.updatingBallImage = true;
 				var worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
 				var pointerTileX = this.map.worldToTileX(worldPoint.x);
 				var pointerTileY = this.map.worldToTileY(worldPoint.y);
 				var conf = this.board.setAt(pointerTileX, pointerTileY);
-				console.log(conf);
-				if (conf) this.add.image(conf.x, conf.y, conf.key);
-				this.updatingBallImage = false;
+				if (conf) {
+					if (this.ballimages[pointerTileX][pointerTileY] != null) {
+						this.ballimages[pointerTileX][pointerTileY].destroy();
+					}
+					this.ballimages[pointerTileX][pointerTileY] = this.add.image(conf.x, conf.y, conf.key);
+				}
 			}
 		}
 	}]);
