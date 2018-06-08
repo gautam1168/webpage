@@ -147131,15 +147131,20 @@ var Board = function () {
 	_createClass(Board, [{
 		key: 'setAt',
 		value: function setAt(x, y) {
-			var imagekey = void 0;
+			var imagekey = void 0,
+			    explode = false;
 			if (this.balls[x][y] == 0) {
 				imagekey = this.ballkeys[this.player][0];
 				this.balls[x][y] = imagekey;
 			} else {
 				var conf = this.getCellconfiguration(x, y);
 				if (this.player == conf.player) {
-					imagekey = this.ballkeys[this.player][conf.keyindex + 1];
-					this.balls[x][y] = imagekey;
+					if (conf.keyindex + 1 == this.ballkeys[this.player].length) {
+						explode = true;
+					} else {
+						imagekey = this.ballkeys[this.player][conf.keyindex + 1];
+						this.balls[x][y] = imagekey;
+					}
 				}
 			}
 			if (this.player == 4) {
@@ -147147,7 +147152,7 @@ var Board = function () {
 			} else {
 				this.player += 1;
 			}
-			return { x: x * 42 + 21, y: y * 42 + 21, key: imagekey };
+			return { x: x * 42 + 21, y: y * 42 + 21, key: imagekey, explode: explode };
 		}
 	}, {
 		key: 'getCellconfiguration',
@@ -147161,6 +147166,92 @@ var Board = function () {
 					return { player: player, keyindex: keyindex };
 				}
 			}
+			return null;
+		}
+	}, {
+		key: 'explosionAt',
+		value: function explosionAt(x, y, ongoing) {
+			if (!ongoing) {
+				this.inactive = new Array(20).fill(0).map(function (e) {
+					return new Array(20).fill(0);
+				});
+			}
+			if (this.inactive[x][y] == 0) {
+				var conf = this.getCellconfiguration(x, y);
+				this.balls[x][y] = 0;
+				var returnconfs = [];
+
+				if (this.inactive[x - 1][y] == 0) {
+					var leftimagekey = void 0,
+					    leftconf = this.getCellconfiguration(x - 1, y),
+					    leftexplode = false;
+					if (leftconf) {
+						leftimagekey = this.ballkeys[conf.player][leftconf.keyindex + 1];
+						if (leftconf.keyindex + 1 == 3) {
+							leftexplode = true;
+							leftimagekey = this.ballkeys[conf.player][leftconf.keyindex];
+						}
+					} else {
+						leftimagekey = this.ballkeys[conf.player][0];
+					}
+					this.balls[x - 1][y] = leftimagekey;
+					returnconfs.push({ x: (x - 1) * 42 + 21, y: y * 42 + 21, key: leftimagekey, explode: leftexplode, tileX: x - 1, tileY: y });
+				}
+
+				if (this.inactive[x + 1][y] == 0) {
+					var rightimagekey = void 0,
+					    rightconf = this.getCellconfiguration(x + 1, y),
+					    rightexplode = false;
+					if (rightconf) {
+						rightimagekey = this.ballkeys[conf.player][rightconf.keyindex + 1];
+						if (rightconf.keyindex + 1 == 3) {
+							rightexplode = true;
+							rightimagekey = this.ballkeys[conf.player][rightconf.keyindex];
+						}
+					} else {
+						rightimagekey = this.ballkeys[conf.player][0];
+					}
+					this.balls[x + 1][y] = rightimagekey;
+					returnconfs.push({ x: (x + 1) * 42 + 21, y: y * 42 + 21, key: rightimagekey, explode: rightexplode, tileX: x + 1, tileY: y });
+				}
+
+				if (this.inactive[x][y - 1] == 0) {
+					var topimagekey = void 0,
+					    topconf = this.getCellconfiguration(x, y - 1),
+					    topexplode = false;
+					if (topconf) {
+						topimagekey = this.ballkeys[conf.player][topconf.keyindex + 1];
+						if (topconf.keyindex + 1 == 3) {
+							topexplode = true;
+							topimagekey = this.ballkeys[conf.player][topconf.keyindex];
+						}
+					} else {
+						topimagekey = this.ballkeys[conf.player][0];
+					}
+					this.balls[x][y - 1] = topimagekey;
+					returnconfs.push({ x: x * 42 + 21, y: (y - 1) * 42 + 21, key: topimagekey, explode: topexplode, tileX: x, tileY: y - 1 });
+				}
+
+				if (this.inactive[x][y + 1] == 0) {
+					var bottomimagekey = void 0,
+					    bottomconf = this.getCellconfiguration(x, y + 1),
+					    bottomexplode = false;
+					if (bottomconf) {
+						bottomimagekey = this.ballkeys[conf.player][bottomconf.keyindex + 1];
+						if (bottomconf.keyindex + 1 == 3) {
+							bottomexplode = true;
+							bottomimagekey = this.ballkeys[conf.player][bottomconf.keyindex];
+						}
+					} else {
+						bottomimagekey = this.ballkeys[conf.player][0];
+					}
+					this.balls[x][y + 1] = bottomimagekey;
+					returnconfs.push({ x: x * 42 + 21, y: (y + 1) * 42 + 21, key: bottomimagekey, explode: bottomexplode, tileX: x, tileY: y + 1 });
+				}
+				this.inactive[x][y] = 1;
+				return returnconfs;
+			}
+			return [];
 		}
 	}]);
 
@@ -147205,6 +147296,7 @@ var ChainreactionScene = function (_Phaser$Scene) {
 			this.load.image('bluetriplet', 'assets/images/bluetriplet.png');
 			this.load.image('redtriplet', 'assets/images/redtriplet.png');
 			this.load.image('yellowtriplet', 'assets/images/yellowtriplet.png');
+			this.load.spritesheet('blueExplode', 'assets/images/blueExplode.png', { frameWidth: 134.5, frameHeight: 100, endFrame: 10 });
 		}
 	}, {
 		key: 'create',
@@ -147214,9 +147306,14 @@ var ChainreactionScene = function (_Phaser$Scene) {
 			var layer = this.map.createBlankDynamicLayer('layer', tiles);
 			layer.fill(0, 0, 0, this.map.width, this.map.height);
 			layer = this.map.convertLayerToStatic(layer);
-			// window.layer = layer;
-			// let ball = this.add.image(21, 21, 'greenball');
-			// layer.setScale(3)
+
+			var config = {
+				key: 'blueExplodeAnimation',
+				frames: this.anims.generateFrameNumbers('blueExplode', { prefix: 'blue_', start: 0, end: 10, first: 0 }),
+				frameRate: 20,
+				onComplete: this.spriteDestroyer.bind(this)
+			};
+			this.anims.create(config);
 		}
 	}, {
 		key: 'update',
@@ -147227,11 +147324,40 @@ var ChainreactionScene = function (_Phaser$Scene) {
 				var pointerTileX = this.map.worldToTileX(worldPoint.x);
 				var pointerTileY = this.map.worldToTileY(worldPoint.y);
 				var conf = this.board.setAt(pointerTileX, pointerTileY);
-				if (conf) {
+				if (conf && !conf.explode) {
 					if (this.ballimages[pointerTileX][pointerTileY] != null) {
 						this.ballimages[pointerTileX][pointerTileY].destroy();
 					}
 					this.ballimages[pointerTileX][pointerTileY] = this.add.image(conf.x, conf.y, conf.key);
+				} else if (conf && conf.explode) {
+					var explodsprite = this.add.sprite(42 * pointerTileX + 20, 42 * pointerTileY - 2, 'blueExplode');
+					this.ballimages[pointerTileX][pointerTileY].destroy();
+					explodsprite.anims.play('blueExplodeAnimation');
+				}
+			}
+		}
+	}, {
+		key: 'spriteDestroyer',
+		value: function spriteDestroyer(sprite, animation) {
+			sprite.destroy();
+			var tileX = (sprite.x - 20) / 42,
+			    tileY = (sprite.y + 2) / 42;
+			this.handleExplosionIn(tileX, tileY);
+		}
+	}, {
+		key: 'handleExplosionIn',
+		value: function handleExplosionIn(pointerTileX, pointerTileY, ongoing) {
+			var confs = this.board.explosionAt(pointerTileX, pointerTileY, ongoing);
+			for (var i = 0; i < confs.length; i++) {
+				var conf = confs[i];
+				if (this.ballimages[conf.tileX][conf.tileY] != null) {
+					this.ballimages[conf.tileX][conf.tileY].destroy();
+				}
+				if (conf.explode) {
+					var explodsprite = this.add.sprite(42 * conf.tileX + 20, 42 * conf.tileY - 2, 'blueExplode');
+					explodsprite.anims.play('blueExplodeAnimation');
+				} else {
+					this.ballimages[conf.tileX][conf.tileY] = this.add.image(conf.x, conf.y, conf.key);
 				}
 			}
 		}
