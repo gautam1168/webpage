@@ -147129,6 +147129,11 @@ var Board = function () {
 	}
 
 	_createClass(Board, [{
+		key: 'getPlayerKey',
+		value: function getPlayerKey() {
+			return this.ballkeys[this.player][0];
+		}
+	}, {
 		key: 'setAt',
 		value: function setAt(x, y) {
 			var imagekey = void 0,
@@ -147276,6 +147281,7 @@ var ChainreactionScene = function (_Phaser$Scene) {
 		_this.ballimages = new Array(20).fill(0).map(function (e) {
 			return new Array(20).fill(null);
 		});
+		_this.indicator = null;
 		return _this;
 	}
 
@@ -147304,9 +147310,9 @@ var ChainreactionScene = function (_Phaser$Scene) {
 			this.map = this.make.tilemap({ tileWidth: 42, tileHeight: 42, width: 20, height: 20 });
 			var tiles = this.map.addTilesetImage('base');
 			var layer = this.map.createBlankDynamicLayer('layer', tiles);
-			layer.fill(0, 0, 0, this.map.width, this.map.height);
+			layer.fill(0, 0, 1, this.map.width, this.map.height);
 			layer = this.map.convertLayerToStatic(layer);
-
+			this.indicator = this.add.image(21, 21, this.board.getPlayerKey());
 			var config = {
 				key: 'blueExplodeAnimation',
 				frames: this.anims.generateFrameNumbers('blueExplode', { prefix: 'blue_', start: 0, end: 10, first: 0 }),
@@ -147334,6 +147340,10 @@ var ChainreactionScene = function (_Phaser$Scene) {
 					this.ballimages[pointerTileX][pointerTileY].destroy();
 					explodsprite.anims.play('blueExplodeAnimation');
 				}
+				if (this.indicator != null) {
+					this.indicator.destroy();
+				}
+				this.indicator = this.add.image(21, 21, this.board.getPlayerKey());
 			}
 		}
 	}, {
