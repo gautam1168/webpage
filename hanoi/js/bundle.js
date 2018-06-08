@@ -147121,10 +147121,10 @@ var Board = function () {
 			return new Array(20).fill(0);
 		});
 		this.ballkeys = {
-			1: ['redball', 'reddoublet'],
-			2: ['blueball', 'bluedoublet'],
-			3: ['greenball', 'greendoublet'],
-			4: ['yellowball', 'yellowdoublet']
+			1: ['redball', 'reddoublet', 'redtriplet'],
+			2: ['blueball', 'bluedoublet', 'bluetriplet'],
+			3: ['greenball', 'greendoublet', 'greentriplet'],
+			4: ['yellowball', 'yellowdoublet', 'yellowtriplet']
 		};
 	}
 
@@ -147201,6 +147201,10 @@ var ChainreactionScene = function (_Phaser$Scene) {
 			this.load.image('bluedoublet', 'assets/images/bluedoublet.png');
 			this.load.image('reddoublet', 'assets/images/reddoublet.png');
 			this.load.image('yellowdoublet', 'assets/images/yellowdoublet.png');
+			this.load.image('greentriplet', 'assets/images/greentriplet.png');
+			this.load.image('bluetriplet', 'assets/images/bluetriplet.png');
+			this.load.image('redtriplet', 'assets/images/redtriplet.png');
+			this.load.image('yellowtriplet', 'assets/images/yellowtriplet.png');
 		}
 	}, {
 		key: 'create',
