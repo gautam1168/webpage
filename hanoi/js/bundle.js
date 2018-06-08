@@ -99163,8 +99163,15 @@ var _GameOfLifeScene = __webpack_require__(1347);
 
 var _GameOfLifeScene2 = _interopRequireDefault(_GameOfLifeScene);
 
+var _ChainreactionScene = __webpack_require__(1348);
+
+var _ChainreactionScene2 = _interopRequireDefault(_ChainreactionScene);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import BootScene from './BootScene';
+// import MarioBrosScene from './MarioBrosScene';
+// import TitleScene from './TitleScene';
 var config = {
     type: Phaser.WEBGL,
     parent: 'content',
@@ -99174,7 +99181,7 @@ var config = {
     physics: {
         default: 'matter',
         matter: {
-            debug: true
+            debug: false
         }
     },
     backgroundColor: '#22262a',
@@ -99182,12 +99189,9 @@ var config = {
     // BootScene,
     // TitleScene,
     // MarioBrosScene,
-    _GameOfLifeScene2.default]
+    // GameOfLifeScene,
+    _ChainreactionScene2.default]
 };
-// import BootScene from './BootScene';
-// import MarioBrosScene from './MarioBrosScene';
-// import TitleScene from './TitleScene';
-
 window.game = new Phaser.Game(config);
 
 /*
@@ -146990,6 +146994,7 @@ var GameOfLifeScene = function (_Phaser$Scene) {
 
 		_this.W = window.innerWidth;
 		_this.H = window.innerHeight;
+		_this.numbers = [];
 		return _this;
 	}
 
@@ -147042,9 +147047,6 @@ var GameOfLifeScene = function (_Phaser$Scene) {
 
 			var target = this.add.sprite(leftoffset * W, (topOffset - 0.02) * H - tube.height * 0.7, 'target');
 			target.setInteractive();
-			target.on('pointerdown', function (pointer) {
-				console.log(pointer);
-			});
 		}
 	}, {
 		key: 'createNumbers',
@@ -147077,120 +147079,92 @@ var GameOfLifeScene = function (_Phaser$Scene) {
 					number.setAngularVelocity(0);
 				});
 				_this2.input.setDraggable(number, true);
+				_this2.numbers.push(number);
 			};
 
 			for (var i = 0; i < numberAssets.length; i++) {
 				_loop(i);
 			}
 		}
-
-		// create() {
-		// 	//tube1
-		// 	let rect = this.add.sprite(100, 400, 'rect');
-		// 	rect.setDisplaySize(20, 50);
-		// 	let wall = this.matter.add.gameObject(rect, {shape: {type: 'rectangle', width: 20, height: 50}} );
-		// 	wall.setStatic(true);
-		// 	wall.setAngle(90);
-		//
-		// 	rect = this.add.sprite(65, 334, 'rect');
-		// 	rect.setDisplaySize(20, 150);
-		// 	wall = this.matter.add.gameObject(rect, {shape: {type: 'rectangle', width: 20, height: 150}} );
-		// 	wall.setStatic(true);
-		//
-		// 	rect = this.add.sprite(135, 334, 'rect');
-		// 	rect.setDisplaySize(20, 150);
-		// 	wall = this.matter.add.gameObject(rect, {shape: {type: 'rectangle', width: 20, height: 150}} );
-		// 	wall.setStatic(true);
-		//
-		// 	//tube2
-		// 	rect = this.add.sprite(200, 400, 'rect');
-		// 	rect.setDisplaySize(20, 50);
-		// 	wall = this.matter.add.gameObject(rect, {shape: {type: 'rectangle', width: 20, height: 50}} );
-		// 	wall.setStatic(true);
-		// 	wall.setAngle(90);
-		//
-		// 	rect = this.add.sprite(165, 334, 'rect');
-		// 	rect.setDisplaySize(20, 150);
-		// 	wall = this.matter.add.gameObject(rect, {shape: {type: 'rectangle', width: 20, height: 150}} );
-		// 	wall.setStatic(true);
-		//
-		// 	rect = this.add.sprite(235, 334, 'rect');
-		// 	rect.setDisplaySize(20, 150);
-		// 	wall = this.matter.add.gameObject(rect, {shape: {type: 'rectangle', width: 20, height: 150}} );
-		// 	wall.setStatic(true);
-		//
-		// 	//tube3
-		// 	rect = this.add.sprite(300, 400, 'rect');
-		// 	rect.setDisplaySize(20, 50);
-		// 	wall = this.matter.add.gameObject(rect, {shape: {type: 'rectangle', width: 20, height: 50}} );
-		// 	wall.setStatic(true);
-		// 	wall.setAngle(90);
-		//
-		// 	rect = this.add.sprite(265, 334, 'rect');
-		// 	rect.setDisplaySize(20, 150);
-		// 	wall = this.matter.add.gameObject(rect, {shape: {type: 'rectangle', width: 20, height: 150}} );
-		// 	wall.setStatic(true);
-		//
-		// 	rect = this.add.sprite(335, 334, 'rect');
-		// 	rect.setDisplaySize(20, 150);
-		// 	wall = this.matter.add.gameObject(rect, {shape: {type: 'rectangle', width: 20, height: 150}} );
-		// 	wall.setStatic(true);
-		//
-		// 	let number1 = this.add.text(100, 200, '2', { font: '32px Arial', fill: '#ffffff' });
-		// 	number1 = this.matter.add.gameObject(number1, {shape: {type: 'rectangle', width: 40, height: 40}});
-		// 	number1.setInteractive(new Phaser.Geom.Rectangle(0, 0, 40, 40), function(number1, x, y, sprite) {
-		// 			return (x > number1.x && y > number1.y && x < number1.width && y < number1.height);
-		// 	});
-		// 	number1.on('drag', function(pointer, x, y) {
-		// 		number1.setPosition(x, y);
-		// 	})
-		// 	number1.on('dragstart', function(pointer, x, y) {
-		// 		number1.setIgnoreGravity(true);
-		// 	})
-		// 	number1.on('dragend', function(pointer, x, y) {
-		// 		number1.setIgnoreGravity(false);
-		// 	})
-		// 	this.input.setDraggable(number1, true);
-		//
-		// 	let number2 = this.add.text(100, 150, '1', { font: '32px Arial', fill: '#ffffff' });
-		// 	number2 = this.matter.add.gameObject(number2, {shape: {type: 'rectangle', width: 40, height: 40}});
-		// 	number2.setInteractive(new Phaser.Geom.Rectangle(0, 0, 40, 40), function(number2, x, y, sprite) {
-		// 			return (x > number2.x && y > number2.y && x < number2.width && y < number2.height);
-		// 	});
-		// 	number2.on('drag', function(pointer, x, y) {
-		// 		number2.setPosition(x, y);
-		// 	})
-		// 	number2.on('dragstart', function(pointer, x, y) {
-		// 		number2.setIgnoreGravity(true);
-		// 	})
-		// 	number2.on('dragend', function(pointer, x, y) {
-		// 		number2.setIgnoreGravity(false);
-		// 	})
-		// 	this.input.setDraggable(number2, true);
-		//
-		// 	let number3 = this.add.text(100, 100, '3', { font: '32px Arial', fill: '#ffffff' });
-		// 	number3 = this.matter.add.gameObject(number3, {shape: {type: 'rectangle', width: 40, height: 40}});
-		// 	number3.setInteractive(new Phaser.Geom.Rectangle(0, 0, 40, 40), function(number3, x, y, sprite) {
-		// 			return (x > number3.x && y > number3.y && x < number3.width && y < number3.height);
-		// 	});
-		// 	number3.on('drag', function(pointer, x, y) {
-		// 		number3.setPosition(x, y);
-		// 	})
-		// 	number3.on('dragstart', function(pointer, x, y) {
-		// 		number3.setIgnoreGravity(true);
-		// 	})
-		// 	number3.on('dragend', function(pointer, x, y) {
-		// 		number3.setIgnoreGravity(false);
-		// 	})
-		// 	this.input.setDraggable(number3, true);
-		// }
-
 	}]);
 
 	return GameOfLifeScene;
 }(Phaser.Scene);
 
 exports.default = GameOfLifeScene;
+
+/***/ }),
+/* 1348 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ChainreactionScene = function (_Phaser$Scene) {
+	_inherits(ChainreactionScene, _Phaser$Scene);
+
+	function ChainreactionScene(test) {
+		_classCallCheck(this, ChainreactionScene);
+
+		var _this = _possibleConstructorReturn(this, (ChainreactionScene.__proto__ || Object.getPrototypeOf(ChainreactionScene)).call(this, {
+			key: 'ChainreactionScene'
+		}));
+
+		_this.W = window.innerWidth;
+		_this.H = window.innerHeight;
+		_this.numbers = [];
+		_this.map = null;
+		return _this;
+	}
+
+	_createClass(ChainreactionScene, [{
+		key: 'preload',
+		value: function preload() {
+			this.load.image('background', 'assets/stack/background.png');
+			this.load.image('base', 'assets/images/chainreactionBase.png');
+			this.load.image('greenball', 'assets/images/greenball.png');
+		}
+	}, {
+		key: 'create',
+		value: function create() {
+			this.map = this.make.tilemap({ tileWidth: 42, tileHeight: 42, width: 20, height: 20 });
+			var tiles = this.map.addTilesetImage('base');
+			var layer = this.map.createBlankDynamicLayer('layer', tiles);
+			layer.fill(0, 0, 0, this.map.width, this.map.height);
+			layer = this.map.convertLayerToStatic(layer);
+			window.layer = layer;
+			var ball = this.add.image(21, 21, 'greenball');
+			// layer.setScale(3)
+		}
+	}, {
+		key: 'update',
+		value: function update(time, delta) {
+			if (this.input.manager.activePointer.isDown) {
+				var worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
+				var pointerTileX = this.map.worldToTileX(worldPoint.x);
+				var pointerTileY = this.map.worldToTileY(worldPoint.y);
+
+				this.add.image(pointerTileX * 42 + 21, pointerTileY * 42 + 21, 'greenball');
+			}
+		}
+	}]);
+
+	return ChainreactionScene;
+}(Phaser.Scene);
+
+exports.default = ChainreactionScene;
 
 /***/ })
 ],[531]);
